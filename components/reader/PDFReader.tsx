@@ -24,6 +24,32 @@ if (typeof window !== "undefined") {
   pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 }
 
+// Polyfill for older mobile browsers: pdf.js relies on modern Promise APIs
+// missing on some older Safari/WebView versions. Harmless where native.
+if (
+  typeof window !== "undefined" &&
+  typeof (Promise as unknown as { withResolvers?: unknown }).withResolvers !==
+    "function"
+) {
+  (
+    Promise as unknown as {
+      withResolvers<T>(): {
+        promise: Promise<T>;
+        resolve: (v: T | PromiseLike<T>) => void;
+        reject: (r?: unknown) => void;
+      };
+    }
+  ).withResolvers = <T,>() => {
+    let resolve!: (v: T | PromiseLike<T>) => void;
+    let reject!: (r?: unknown) => void;
+    const promise = new Promise<T>((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    return { promise, resolve, reject };
+  };
+}
+
 /** Apple-style easing used for page slides. */
 const SLIDE_EASE = "ease-[cubic-bezier(0.32,0.72,0,1)]";
 
@@ -74,6 +100,7 @@ export function PDFReader({ fileUrl, title, downloadEnabled, downloadUrl, storag
   const [error, setError] = useState<string | null>(null);
   const [pageInput, setPageInput] = useState(String(initial));
   const [progress, setProgress] = useState<{ loaded: number; total: number } | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
   const pageRef = useRef(initial);
   const numPagesRef = useRef<number | null>(null);
   const winRef = useRef<number[]>([initial]);
@@ -124,6 +151,26 @@ export function PDFReader({ fileUrl, title, downloadEnabled, downloadUrl, storag
     },
     []
   );
+
+  // Load timeout: a stuck "Memuat…" becomes an actionable error + retry
+  // instead of a mystery (slow/flaky mobile networks, old WebViews).
+  useEffect(() => {
+    if (error) return;
+    const t = window.setTimeout(() => {
+      if (!numPagesRef.current) {
+        setError(
+          "Memuat terlalu lama (lebih dari 45 detik). Periksa koneksi internetmu, lalu coba lagi."
+        );
+      }
+    }, 45000);
+    return () => window.clearTimeout(t);
+  }, [fileUrl, retryKey, error]);
+
+  function retry() {
+    setError(null);
+    setProgress(null);
+    setRetryKey((k) => k + 1);
+  }
 
   function onLoadSuccess({ numPages: n }: { numPages: number }) {
     setNumPages(n);
@@ -281,15 +328,24 @@ export function PDFReader({ fileUrl, title, downloadEnabled, downloadUrl, storag
       >
         <p className="font-serif text-xl text-red-900">PDF tidak dapat dibuka</p>
         <p className="max-w-md text-sm text-red-800">{error}</p>
-        {downloadEnabled && downloadUrl && (
-          <a
-            href={downloadUrl}
-            download
-            className="mt-2 inline-flex h-10 items-center gap-2 bg-ink px-5 text-sm font-medium text-paper"
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={retry}
+            className="inline-flex h-11 items-center gap-2 rounded-full bg-ink px-6 text-sm font-medium text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
-            <Download className="h-4 w-4" aria-hidden="true" /> Coba unduh saja
-          </a>
-        )}
+            Coba lagi
+          </button>
+          {downloadEnabled && downloadUrl && (
+            <a
+              href={downloadUrl}
+              download
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-line bg-white px-6 text-sm font-medium text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" /> Unduh saja
+            </a>
+          )}
+        </div>
       </div>
     );
   }
@@ -406,6 +462,7 @@ export function PDFReader({ fileUrl, title, downloadEnabled, downloadUrl, storag
       {/* Pages: sliding window (prev/current/next) for Apple-smooth turns */}
       <div className="reader-scroll flex flex-1 justify-center overflow-auto px-4 py-6">
         <Document
+          key={retryKey}
           file={fileUrl}
           onLoadSuccess={onLoadSuccess}
           onLoadError={onLoadError}

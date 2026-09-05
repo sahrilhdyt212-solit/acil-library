@@ -56,6 +56,7 @@ export default async function ReadPage({
       </div>
       <div className="overflow-hidden border border-line">
         <PDFReaderLoader
+          key={book.slug}
           fileUrl={pdfUrl}
           title={book.title}
           downloadEnabled={book.download_enabled}
