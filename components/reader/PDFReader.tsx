@@ -13,6 +13,7 @@ import {
   Shrink,
 } from "lucide-react";
 import { Spinner } from "@/components/ui/loading";
+import { PageErrorBoundary } from "@/components/reader/PageErrorBoundary";
 import { cn } from "@/lib/utils";
 
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -531,17 +532,23 @@ export function PDFReader({ fileUrl, title, downloadEnabled, downloadUrl, storag
                 >
                   <div className="flex justify-center">
                     <div className="shadow-[0_12px_50px_rgba(0,0,0,0.18)]">
-                      <Page
+                      <PageErrorBoundary
+                        key={`pbe-${pn}`}
                         pageNumber={pn}
-                        width={viewportWidth ? viewportWidth * scale : undefined}
-                        renderTextLayer={pn === page}
-                        renderAnnotationLayer={pn === page}
-                        loading={
-                          <div className="flex min-h-[50vh] items-center justify-center">
-                            <Spinner label={`Merender halaman ${pn}…`} />
-                          </div>
-                        }
-                      />
+                        onSkip={() => goTo(pn + 1)}
+                      >
+                        <Page
+                          pageNumber={pn}
+                          width={viewportWidth ? viewportWidth * scale : undefined}
+                          renderTextLayer={pn === page}
+                          renderAnnotationLayer={pn === page}
+                          loading={
+                            <div className="flex min-h-[50vh] items-center justify-center">
+                              <Spinner label={`Merender halaman ${pn}…`} />
+                            </div>
+                          }
+                        />
+                      </PageErrorBoundary>
                     </div>
                   </div>
                 </div>
