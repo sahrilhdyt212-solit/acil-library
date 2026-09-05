@@ -141,12 +141,16 @@ export function PDFReader({ fileUrl, title, downloadEnabled, downloadUrl, storag
   const trackRef = useRef<HTMLDivElement>(null);
   const [viewportWidth, setViewportWidth] = useState<number | undefined>(undefined);
 
+  // Measure the ALWAYS-MOUNTED outer container (viewport mounts late,
+  // only after the document loads — observing it with [] deps would
+  // never attach and leave width undefined = full-size pages = clipped
+  // on phones). Subtract the surrounding horizontal padding (px-4).
   useEffect(() => {
-    const el = viewportRef.current;
+    const el = containerRef.current;
     if (!el) return;
     const ro = new ResizeObserver((entries) => {
       const w = entries[0]?.contentRect.width;
-      if (w) setViewportWidth(Math.min(w, 900));
+      if (w) setViewportWidth(Math.min(w - 32, 900));
     });
     ro.observe(el);
     return () => ro.disconnect();
