@@ -63,6 +63,14 @@ body {
   user-select: text;
 }
 
+/* Hard guard: a PDF canvas may never overflow its slot, even if the
+   measured width is stale/missing (worst case = slightly soft rendering,
+   never clipped content). The JS measurement remains the sharp path. */
+.pdf-slot canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
 /* Subtle motion only — fully disabled for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
   html {

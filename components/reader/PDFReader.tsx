@@ -549,7 +549,7 @@ export function PDFReader({ fileUrl, title, downloadEnabled, downloadUrl, storag
                   className="w-full min-w-0 shrink-0"
                   aria-hidden={pn !== page}
                 >
-                  <div className="flex justify-center">
+                  <div className="pdf-slot flex justify-center">
                     <div className="shadow-[0_12px_50px_rgba(0,0,0,0.18)]">
                       <PageErrorBoundary
                         key={`pbe-${pn}`}
