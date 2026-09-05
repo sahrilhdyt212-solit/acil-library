@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getBooks, getCategories } from "@/lib/data";
+import { siteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const base = await siteUrl();
   const [books, categories] = await Promise.all([
     getBooks({ limit: 100 }),
     getCategories(),

@@ -3,6 +3,7 @@ import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { siteUrl } from "@/lib/site";
 
 const serif = Fraunces({
   variable: "--font-display",
@@ -16,31 +17,34 @@ const sans = Inter({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: "Acil Library — Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan",
-    template: "%s · Acil Library",
-  },
-  description:
-    "Acil Library adalah arsip bacaan digital publik. Jelajahi buku pilihan Novel Hukum, Hukum, dan Politik — buka buku dan baca gratis di peramban.",
-  openGraph: {
-    type: "website",
-    siteName: "Acil Library",
-    title: "Acil Library",
+export async function generateMetadata(): Promise<Metadata> {
+  // Base URL resolved per-request (correct on every deployment),
+  // so canonical + OG URLs never point at localhost in production.
+  const base = await siteUrl();
+  return {
+    metadataBase: new URL(base),
+    title: {
+      default: "Acil Library — Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan",
+      template: "%s · Acil Library",
+    },
     description:
-      "Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Acil Library",
-    description:
-      "Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan.",
-  },
-  robots: { index: true, follow: true },
-};
+      "Acil Library adalah arsip bacaan digital publik. Jelajahi buku pilihan Novel Hukum, Hukum, dan Politik — buka buku dan baca gratis di peramban.",
+    openGraph: {
+      type: "website",
+      siteName: "Acil Library",
+      title: "Acil Library",
+      description:
+        "Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan.",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Acil Library",
+      description:
+        "Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan.",
+    },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default function RootLayout({
   children,
