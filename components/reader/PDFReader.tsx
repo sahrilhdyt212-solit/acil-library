@@ -25,30 +25,45 @@ if (typeof window !== "undefined") {
   pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 }
 
-// Polyfill for older mobile browsers: pdf.js relies on modern Promise APIs
-// missing on some older Safari/WebView versions. Harmless where native.
-if (
-  typeof window !== "undefined" &&
-  typeof (Promise as unknown as { withResolvers?: unknown }).withResolvers !==
-    "function"
-) {
-  (
-    Promise as unknown as {
-      withResolvers<T>(): {
-        promise: Promise<T>;
-        resolve: (v: T | PromiseLike<T>) => void;
-        reject: (r?: unknown) => void;
-      };
-    }
-  ).withResolvers = <T,>() => {
-    let resolve!: (v: T | PromiseLike<T>) => void;
-    let reject!: (r?: unknown) => void;
-    const promise = new Promise<T>((res, rej) => {
-      resolve = res;
-      reject = rej;
-    });
-    return { promise, resolve, reject };
-  };
+// Polyfill for older mobile browsers: pdf.js relies on modern Web APIs
+// missing on older Safari/WebView versions. Harmless where native.
+if (typeof window !== "undefined") {
+  const P = Promise as unknown as { withResolvers?: unknown };
+  if (typeof P.withResolvers !== "function") {
+    (
+      Promise as unknown as {
+        withResolvers<T>(): {
+          promise: Promise<T>;
+          resolve: (v: T | PromiseLike<T>) => void;
+          reject: (r?: unknown) => void;
+        };
+      }
+    ).withResolvers = <T,>() => {
+      let resolve!: (v: T | PromiseLike<T>) => void;
+      let reject!: (r?: unknown) => void;
+      const promise = new Promise<T>((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      return { promise, resolve, reject };
+    };
+  }
+  // pdf.js calls URL.parse(url, base) internally; iOS < 18.4 Safari
+  // doesn't have it (returns null on invalid input vs throwing).
+  const U = URL as unknown as { parse?: unknown };
+  if (typeof U.parse !== "function") {
+    (
+      URL as unknown as {
+        parse: (url: string, base?: string) => URL | null;
+      }
+    ).parse = (url: string, base?: string) => {
+      try {
+        return new URL(url, base);
+      } catch {
+        return null;
+      }
+    };
+  }
 }
 
 /** Apple-style easing used for page slides. */
@@ -527,7 +542,7 @@ export function PDFReader({ fileUrl, title, downloadEnabled, downloadUrl, storag
               {win.map((pn) => (
                 <div
                   key={pn}
-                  className="w-full shrink-0"
+                  className="w-full min-w-0 shrink-0"
                   aria-hidden={pn !== page}
                 >
                   <div className="flex justify-center">
