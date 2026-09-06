@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, BookOpen } from "lucide-react";
 import { getBookBySlug, getBookPdfUrl, getRelatedBooks } from "@/lib/data";
 import { BookCover, BookGrid } from "@/components/books/BookCard";
 import { CategoryBadge } from "@/components/books/CategoryBadge";
+import { ShareButton } from "@/components/books/ShareButton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -127,6 +128,10 @@ export default async function BookDetailPage({
                 Unduh PDF <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
             )}
+            <ShareButton
+              title={`${book.title} — ${book.author}`}
+              text={book.description?.slice(0, 140)}
+            />
           </div>
 
           <dl className="mt-10 grid max-w-2xl grid-cols-2 gap-px border border-line bg-stone-200/60 text-sm sm:grid-cols-4">

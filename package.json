@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "node scripts/copy-pdf-worker.mjs"
+    "postinstall": "node scripts/copy-pdf-worker.mjs && node scripts/generate-icons.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.23",
@@ -34,6 +34,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

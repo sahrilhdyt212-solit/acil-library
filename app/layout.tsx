@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -16,6 +16,13 @@ const sans = Inter({
   subsets: ["latin"],
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#1d1d1f",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   // Base URL resolved per-request (correct on every deployment),
@@ -43,6 +50,11 @@ export async function generateMetadata(): Promise<Metadata> {
         "Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan.",
     },
     robots: { index: true, follow: true },
+    appleWebApp: {
+      capable: true,
+      title: "Acil Library",
+      statusBarStyle: "default",
+    },
   };
 }
 

@@ -23,6 +23,10 @@
 # generated pdf.js worker (recreated by postinstall)
 public/pdf.worker.min.mjs
 
+# generated PWA icons (recreated by postinstall)
+public/icons/
+app/apple-icon.png
+
 # misc
 .DS_Store
 *.pem

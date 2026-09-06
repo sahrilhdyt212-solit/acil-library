@@ -5,6 +5,11 @@ Built with **Next.js + TypeScript + Tailwind CSS + Supabase**, with a real brows
 PDF reader and a secure librarian admin CMS.
 
 UI sepenuhnya **Bahasa Indonesia** dan didesain **mobile-first**.
+Tersedia sebagai **PWA installable** (`app/manifest.ts`, ikon dibuat otomatis
+oleh `scripts/generate-icons.mjs`): standalone display, theme color, ikon
+maskable + Apple touch icon. Catatan: belum ada offline cache — baca tetap
+butuh koneksi (signed URL kedaluwarsa); halaman detail punya tombol
+**Bagikan** (Web Share API di HP, salin tautan di desktop).
 
 Bahasa desain: **disiplin ala Apple yang diterjemahkan untuk perpustakaan**
 (kejelasan ruang, hierarki, tipografi besar yang rapat, whitespace lega,
