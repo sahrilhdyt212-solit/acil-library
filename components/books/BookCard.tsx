@@ -8,7 +8,7 @@ export function BookCover({
   sizes = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw",
   priority = false,
 }: {
-  book: Pick<BookWithCategory, "title" | "author" | "cover_url" | "cover_path">;
+  book: Pick<BookWithCategory, "title" | "author" | "cover_url" | "cover_path" | "cover_srcset">;
   sizes?: string;
   priority?: boolean;
 }) {
@@ -17,6 +17,7 @@ export function BookCover({
     <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg border border-line bg-[#EDE8DF]">
       <CoverImage
         src={src}
+        srcSet={book.cover_srcset ?? null}
         alt={`Cover of ${book.title}`}
         title={book.title}
         sizes={sizes}

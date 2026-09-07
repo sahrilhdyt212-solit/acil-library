@@ -7,6 +7,11 @@ export interface Category {
   updated_at: string;
 }
 
+export interface CoverVariant {
+  w: number;
+  path: string;
+}
+
 export interface Book {
   id: string;
   title: string;
@@ -19,6 +24,10 @@ export interface Book {
   pdf_path: string | null;
   cover_url: string | null;
   pdf_url: string | null;
+  /** Responsive cover sizes (DB jsonb). Empty/missing = use cover_path. */
+  cover_variants?: CoverVariant[] | null;
+  /** Runtime-resolved srcset (signed URLs). Never stored. */
+  cover_srcset?: string | null;
   featured: boolean;
   published: boolean;
   download_enabled: boolean;

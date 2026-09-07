@@ -28,6 +28,7 @@ create table if not exists public.books (
   pdf_path text,
   cover_url text,
   pdf_url text,
+  cover_variants jsonb not null default '[]',
   featured boolean not null default false,
   published boolean not null default false,
   download_enabled boolean not null default true,

@@ -9,8 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { CoverImage } from "@/components/books/CoverImage";
-import { compressCoverImage } from "@/components/admin/compress-image";
-import { uploadDirect } from "@/components/admin/direct-upload";
+import { uploadCoverDirect, uploadDirect } from "@/components/admin/direct-upload";
 import { validateCover, validatePdf } from "@/lib/file-validation";
 import type { Category } from "@/types";
 
@@ -94,15 +93,15 @@ export function BookForm({
 
       // 2. Upload DIRECTLY browser → Supabase Storage. Big PDFs never pass
       // through Next.js, so no Server Action / proxy body limits apply.
+      // Covers upload once as original + responsive variants (srcset).
       let cover_path: string | null = null;
+      let cover_variants: string | null = null;
       let pdf_path: string | null = null;
       if (coverFile && coverFile.size > 0) {
         setStatus("Mengompresi sampul…");
-        const compressed = await compressCoverImage(coverFile);
-        setStatus(
-          `Mengunggah sampul (${(compressed.size / 1024 / 1024).toFixed(1)} MB)…`
-        );
-        ({ path: cover_path } = await uploadDirect(formId, compressed, "cover"));
+        const uploaded = await uploadCoverDirect(formId, coverFile, setStatus);
+        cover_path = uploaded.originalPath;
+        cover_variants = JSON.stringify(uploaded.variants);
       }
       if (pdfFile && pdfFile.size > 0) {
         setStatus(
@@ -118,6 +117,7 @@ export function BookForm({
       formData.delete("pdf");
       formData.set("id", formId);
       if (cover_path) formData.set("cover_path", cover_path);
+      if (cover_variants) formData.set("cover_variants", cover_variants);
       if (pdf_path) formData.set("pdf_path", pdf_path);
 
       // Checkboxes: FormData only includes checked boxes; normalize explicitly.

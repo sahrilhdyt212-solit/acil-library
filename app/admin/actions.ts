@@ -48,6 +48,61 @@ function isValidBookPath(
     : /\.pdf$/i.test(path);
 }
 
+interface CoverVariantRef {
+  w: number;
+  path: string;
+}
+
+/** Parse + validate the cover_variants JSON sent by the browser form. */
+function parseCoverVariants(
+  raw: string | null,
+  bookId: string
+): { variants?: CoverVariantRef[]; error?: string } {
+  if (!raw || !raw.trim()) return {};
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return { error: "Data varian sampul rusak. Unggah ulang sampul." };
+  }
+  if (!Array.isArray(parsed) || parsed.length === 0 || parsed.length > 4) {
+    return { error: "Data varian sampul tidak valid. Unggah ulang sampul." };
+  }
+  const variants: CoverVariantRef[] = [];
+  for (const item of parsed as Array<Record<string, unknown>>) {
+    const w = typeof item?.w === "number" ? Math.floor(item.w) : NaN;
+    const path = typeof item?.path === "string" ? item.path.trim() : "";
+    if (!Number.isInteger(w) || w < 100 || w > 3000) {
+      return { error: "Data varian sampul tidak valid. Unggah ulang sampul." };
+    }
+    if (!isValidBookPath(bookId, path, "cover")) {
+      return { error: "Referensi sampul tidak valid. Unggah ulang sampul." };
+    }
+    variants.push({ w, path });
+  }
+  return { variants };
+}
+
+/** All stored file paths of a book row (for cleanup). */
+function rowFilePaths(row: {
+  cover_path: string | null;
+  pdf_path: string | null;
+  cover_variants?: unknown;
+}): { bucket: string; path: string }[] {
+  const out: { bucket: string; path: string }[] = [];
+  if (row.cover_path) out.push({ bucket: COVER_BUCKET, path: row.cover_path });
+  if (row.pdf_path) out.push({ bucket: PDF_BUCKET, path: row.pdf_path });
+  const variants = row.cover_variants;
+  if (Array.isArray(variants)) {
+    for (const v of variants as Array<Record<string, unknown>>) {
+      if (typeof v?.path === "string" && v.path) {
+        out.push({ bucket: COVER_BUCKET, path: v.path });
+      }
+    }
+  }
+  return out;
+}
+
 /** Create or update a book from admin form data.
  *
  * Files are uploaded DIRECTLY by the browser to Supabase Storage (so large
@@ -87,13 +142,14 @@ export async function saveBookAction(formData: FormData): Promise<{ ok: boolean;
   // Existing row (edit target + old file cleanup).
   const { data: existingRow } = await supabase
     .from("books")
-    .select("id,cover_path,pdf_path")
+    .select("id,cover_path,pdf_path,cover_variants")
     .eq("id", bookId)
     .maybeSingle();
   const oldPaths = (existingRow ?? null) as {
     id: string;
     cover_path: string | null;
     pdf_path: string | null;
+    cover_variants?: unknown;
   } | null;
 
   // Slug uniqueness (excluding this book).
@@ -105,12 +161,30 @@ export async function saveBookAction(formData: FormData): Promise<{ ok: boolean;
     const clash = (existing ?? []).some((r: { id: string }) => r.id !== bookId);
     if (clash) {
       // The browser already uploaded new files for this attempt — remove them
-      // so they don't become orphans.
+      // so they don't become orphans (paths re-validated inside cleanup).
+      let clashVariantPaths: string[] = [];
+      try {
+        const rawVariants = JSON.parse(
+          (formData.get("cover_variants") as string) || "[]"
+        );
+        if (Array.isArray(rawVariants)) {
+          clashVariantPaths = rawVariants
+            .map((v: unknown) =>
+              typeof (v as Record<string, unknown>)?.path === "string"
+                ? ((v as Record<string, unknown>).path as string)
+                : ""
+            )
+            .filter(Boolean);
+        }
+      } catch {
+        clashVariantPaths = [];
+      }
       await cleanupNewUploads(
         supabase,
         bookId,
         (formData.get("cover_path") as string) || null,
-        (formData.get("pdf_path") as string) || null
+        (formData.get("pdf_path") as string) || null,
+        clashVariantPaths
       );
       return { ok: false, error: `Slug “${slug}” sudah dipakai. Pilih yang lain.` };
     }
@@ -123,6 +197,14 @@ export async function saveBookAction(formData: FormData): Promise<{ ok: boolean;
     return { ok: false, error: "Referensi sampul tidak valid. Unggah ulang sampul." };
   if (newPdfPath && !isValidBookPath(bookId, newPdfPath, "pdf"))
     return { ok: false, error: "Referensi PDF tidak valid. Unggah ulang PDF." };
+  const { variants: newVariants, error: variantsError } = parseCoverVariants(
+    (formData.get("cover_variants") as string) || null,
+    bookId
+  );
+  if (variantsError) return { ok: false, error: variantsError };
+  if (newVariants && !newCoverPath)
+    return { ok: false, error: "Data sampul tidak lengkap. Unggah ulang sampul." };
+  const newVariantPaths = (newVariants ?? []).map((v) => v.path);
 
   const patch: Record<string, unknown> = {
     title,
@@ -138,6 +220,7 @@ export async function saveBookAction(formData: FormData): Promise<{ ok: boolean;
   if (newCoverPath) {
     patch.cover_path = newCoverPath;
     patch.cover_url = publicUrl(COVER_BUCKET, newCoverPath);
+    patch.cover_variants = newVariants ?? [];
   }
   if (newPdfPath) {
     patch.pdf_path = newPdfPath;
@@ -150,7 +233,7 @@ export async function saveBookAction(formData: FormData): Promise<{ ok: boolean;
       .update(patch)
       .eq("id", bookId);
     if (updateError) {
-      await cleanupNewUploads(supabase, bookId, newCoverPath, newPdfPath);
+      await cleanupNewUploads(supabase, bookId, newCoverPath, newPdfPath, newVariantPaths);
       return { ok: false, error: `Gagal menyimpan: ${updateError.message}`, id: bookId };
     }
   } else {
@@ -158,16 +241,22 @@ export async function saveBookAction(formData: FormData): Promise<{ ok: boolean;
       .from("books")
       .insert({ id: bookId, ...patch });
     if (insertError) {
-      await cleanupNewUploads(supabase, bookId, newCoverPath, newPdfPath);
+      await cleanupNewUploads(supabase, bookId, newCoverPath, newPdfPath, newVariantPaths);
       return { ok: false, error: `Gagal membuat: ${insertError.message}`, id: bookId };
     }
   }
 
-  // Best-effort cleanup of replaced files (never breaks the save).
-  if (newCoverPath && oldPaths?.cover_path && oldPaths.cover_path !== newCoverPath)
-    await removeFile(COVER_BUCKET, oldPaths.cover_path);
-  if (newPdfPath && oldPaths?.pdf_path && oldPaths.pdf_path !== newPdfPath)
-    await removeFile(PDF_BUCKET, oldPaths.pdf_path);
+  // Best-effort cleanup of replaced files (never breaks the save):
+  // anything stored before that isn't referenced anymore goes away,
+  // including old size variants.
+  const keep = new Set(
+    [newCoverPath, newPdfPath, ...newVariantPaths].filter(Boolean) as string[]
+  );
+  if (oldPaths) {
+    for (const target of rowFilePaths(oldPaths)) {
+      if (!keep.has(target.path)) await removeFile(target.bucket, target.path);
+    }
+  }
 
   revalidatePath("/admin");
   revalidatePath("/admin/books");
@@ -182,7 +271,8 @@ async function cleanupNewUploads(
   supabase: any,
   bookId: string,
   coverPath: string | null,
-  pdfPath: string | null
+  pdfPath: string | null,
+  variantPaths: string[] = []
 ): Promise<void> {
   try {
     const targets: Array<[string, string]> = [];
@@ -190,6 +280,11 @@ async function cleanupNewUploads(
       targets.push([COVER_BUCKET, coverPath.trim()]);
     if (pdfPath && isValidBookPath(bookId, pdfPath.trim(), "pdf"))
       targets.push([PDF_BUCKET, pdfPath.trim()]);
+    for (const p of variantPaths) {
+      const path = (p || "").trim();
+      if (path && isValidBookPath(bookId, path, "cover"))
+        targets.push([COVER_BUCKET, path]);
+    }
     for (const [bucket, path] of targets) {
       await supabase.storage.from(bucket).remove([path]);
     }
@@ -218,7 +313,7 @@ export async function deleteBookAction(id: string): Promise<{ ok: boolean; error
   // Read storage paths from the DB (never trust client-provided paths).
   const { data, error: fetchError } = await supabase
     .from("books")
-    .select("cover_path,pdf_path")
+    .select("cover_path,pdf_path,cover_variants")
     .eq("id", id)
     .single();
   if (fetchError) return { ok: false, error: fetchError.message };
@@ -226,9 +321,16 @@ export async function deleteBookAction(id: string): Promise<{ ok: boolean; error
   const { error: deleteError } = await supabase.from("books").delete().eq("id", id);
   if (deleteError) return { ok: false, error: deleteError.message };
 
-  const row = data as { cover_path: string | null; pdf_path: string | null } | null;
-  await removeFile(COVER_BUCKET, row?.cover_path);
-  await removeFile(PDF_BUCKET, row?.pdf_path);
+  const row = data as {
+    cover_path: string | null;
+    pdf_path: string | null;
+    cover_variants?: unknown;
+  } | null;
+  if (row) {
+    for (const target of rowFilePaths(row)) {
+      await removeFile(target.bucket, target.path);
+    }
+  }
 
   revalidatePath("/admin");
   revalidatePath("/admin/books");

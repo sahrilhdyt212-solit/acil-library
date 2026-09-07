@@ -23,6 +23,7 @@ function initials(title: string): string {
  */
 export function CoverImage({
   src,
+  srcSet,
   alt,
   title,
   sizes,
@@ -30,6 +31,7 @@ export function CoverImage({
   className,
 }: {
   src: string | null | undefined;
+  srcSet?: string | null;
   alt: string;
   title: string;
   sizes?: string;
@@ -65,6 +67,7 @@ export function CoverImage({
       alt={alt}
       fill
       sizes={sizes}
+      {...(srcSet ? { srcSet } : {})}
       priority={priority}
       // Supabase CDN serves covers directly: skip Next's server-side
       // optimization fetch (avoids SSRF/private-IP blocks in restricted
