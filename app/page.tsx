@@ -6,6 +6,8 @@ import { BookCarousel } from "@/components/books/BookCarousel";
 import { isSupabaseConfigured } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export const revalidate = 60;
 
 function ArrowLink({
