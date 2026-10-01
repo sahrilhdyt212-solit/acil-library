@@ -43,5 +43,18 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
+  // Protect /belajarku: pembaca wajib masuk dulu.
+  if (pathname.startsWith("/belajarku")) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/masuk";
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   return supabaseResponse;
 }

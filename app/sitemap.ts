@@ -1,17 +1,19 @@
 import type { MetadataRoute } from "next";
 import { getBooks, getCategories } from "@/lib/data";
+import { getCourses } from "@/lib/courses";
 import { siteUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = await siteUrl();
-  const [books, categories] = await Promise.all([
+  const [books, categories, courses] = await Promise.all([
     getBooks({ limit: 100 }),
     getCategories(),
+    getCourses(),
   ]);
 
-  const staticRoutes = ["", "/library", "/search", "/about"].map((route) => ({
+  const staticRoutes = ["", "/library", "/search", "/about", "/kursus"].map((route) => ({
     url: `${base}${route}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
@@ -32,5 +34,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...categoryRoutes, ...bookRoutes];
+  const courseRoutes = courses.map((c) => ({
+    url: `${base}/kursus/${c.slug}`,
+    lastModified: new Date(c.updated_at),
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...categoryRoutes, ...bookRoutes, ...courseRoutes];
 }

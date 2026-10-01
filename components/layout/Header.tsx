@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, Search, X } from "lucide-react";
 import { SearchInput } from "@/components/books/SearchInput";
+import { ReaderAccountNav } from "@/components/layout/ReaderAccountNav";
 import { AcilMark } from "@/components/brand/AcilMark";
 
 const NAV = [
   { href: "/library", label: "Perpustakaan" },
+  { href: "/kursus", label: "Kursus" },
   { href: "/#categories", label: "Kategori" },
   { href: "/about", label: "Tentang" },
 ];
@@ -49,6 +51,10 @@ export function Header() {
 
         <div className="hidden w-56 md:block lg:w-64">
           <SearchInput placeholder="Cari buku…" className="w-full" />
+        </div>
+
+        <div className="hidden md:block">
+          <ReaderAccountNav />
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
@@ -94,6 +100,9 @@ export function Header() {
               {item.label}
             </Link>
           ))}
+          <div onClick={() => setOpen(false)}>
+            <ReaderAccountNav mobile />
+          </div>
         </nav>
       )}
     </header>
