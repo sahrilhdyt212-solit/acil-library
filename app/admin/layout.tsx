@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   BookOpen,
   FolderOpen,
+  GraduationCap,
   LayoutDashboard,
   LogOut,
   Settings,
@@ -13,6 +14,7 @@ import { AcilMark } from "@/components/brand/AcilMark";
 const NAV = [
   { href: "/admin", label: "Dasbor", icon: LayoutDashboard },
   { href: "/admin/books", label: "Buku", icon: BookOpen },
+  { href: "/admin/kursus", label: "Kursus", icon: GraduationCap },
   { href: "/admin/categories", label: "Kategori", icon: FolderOpen },
   { href: "/admin/settings", label: "Pengaturan", icon: Settings },
 ];
@@ -99,6 +101,7 @@ async function AdminShell({ children }: { children: React.ReactNode }) {
           <nav className="flex items-center gap-0.5 text-[13px] sm:gap-1 sm:text-sm" aria-label="Admin seluler">
             <Link href="/admin" className="px-1.5 py-1 font-medium sm:px-2">Dasbor</Link>
             <Link href="/admin/books" className="px-1.5 py-1 font-medium sm:px-2">Buku</Link>
+            <Link href="/admin/kursus" className="px-1.5 py-1 font-medium sm:px-2">Kursus</Link>
             <Link href="/admin/categories" className="px-1.5 py-1 font-medium sm:px-2">Kategori</Link>
             <form action={signOutAction}>
               <button type="submit" aria-label="Keluar" className="p-2">
