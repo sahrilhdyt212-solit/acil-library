@@ -12,12 +12,23 @@ import {
   removeFile,
 } from "@/lib/storage";
 
-async function requireUser() {
+/**
+ * Gerbang super admin: hanya user yg terdaftar di public.admins.
+ * Pembaca (login kursus) bukan admin — mereka ditendang ke beranda,
+ * seolah panel admin tidak ada.
+ */
+async function requireAdmin() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/admin/login?next=/admin");
+  const { data: admin } = await supabase
+    .from("admins")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!admin) redirect("/");
   return { supabase, user };
 }
 
@@ -111,7 +122,7 @@ function rowFilePaths(row: {
  * against this book's folder before being saved.
  */
 export async function saveBookAction(formData: FormData): Promise<{ ok: boolean; error?: string; id?: string }> {
-  const { supabase } = await requireUser();
+  const { supabase } = await requireAdmin();
 
   const rawId = ((formData.get("id") as string) || "").trim();
   const providedId = UUID_RE.test(rawId) ? rawId : null;
@@ -298,7 +309,7 @@ export async function toggleBookFieldAction(
   field: "published" | "featured",
   value: boolean
 ): Promise<{ ok: boolean; error?: string }> {
-  const { supabase } = await requireUser();
+  const { supabase } = await requireAdmin();
   const { error } = await supabase.from("books").update({ [field]: value }).eq("id", id);
   if (error) return { ok: false, error: error.message };
   revalidatePath("/admin");
@@ -309,7 +320,7 @@ export async function toggleBookFieldAction(
 }
 
 export async function deleteBookAction(id: string): Promise<{ ok: boolean; error?: string }> {
-  const { supabase } = await requireUser();
+  const { supabase } = await requireAdmin();
   // Read storage paths from the DB (never trust client-provided paths).
   const { data, error: fetchError } = await supabase
     .from("books")
@@ -342,7 +353,7 @@ export async function deleteBookAction(id: string): Promise<{ ok: boolean; error
 export async function saveCategoryAction(
   formData: FormData
 ): Promise<{ ok: boolean; error?: string; id?: string }> {
-  const { supabase } = await requireUser();
+  const { supabase } = await requireAdmin();
   const id = (formData.get("id") as string) || null;
   const name = ((formData.get("name") as string) || "").trim();
   const rawSlug = ((formData.get("slug") as string) || "").trim();
@@ -375,7 +386,7 @@ export async function saveCategoryAction(
 }
 
 export async function deleteCategoryAction(id: string): Promise<{ ok: boolean; error?: string }> {
-  const { supabase } = await requireUser();
+  const { supabase } = await requireAdmin();
   const { count } = await supabase
     .from("books")
     .select("id", { count: "exact", head: true })

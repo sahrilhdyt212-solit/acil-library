@@ -29,7 +29,8 @@ export async function updateSession(request: NextRequest) {
 
   await supabase.auth.getUser();
 
-  // Protect /admin (except /admin/login): redirect unauthenticated users.
+  // Protect /admin (except /admin/login): hanya super admin
+  // (public.admins). Pembaca yg login kursus bukan admin — tendang ke beranda.
   const { pathname } = request.nextUrl;
   if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
     const {
@@ -40,6 +41,17 @@ export async function updateSession(request: NextRequest) {
       loginUrl.pathname = "/admin/login";
       loginUrl.searchParams.set("next", pathname);
       return NextResponse.redirect(loginUrl);
+    }
+    const { data: admin } = await supabase
+      .from("admins")
+      .select("user_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (!admin) {
+      const homeUrl = request.nextUrl.clone();
+      homeUrl.pathname = "/";
+      homeUrl.search = "";
+      return NextResponse.redirect(homeUrl);
     }
   }
 
