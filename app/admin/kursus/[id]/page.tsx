@@ -32,7 +32,7 @@ export default async function EditCoursePage({
 
   const { data: course } = await supabase
     .from("courses")
-    .select("id, title, slug, description, published, cover_path")
+    .select("id, title, slug, description, published, cover_path, provider, duration_text, outcomes, syllabus, ttd_image_path, ttd_name, ttd_title, certificate_enabled")
     .eq("id", id)
     .single();
   if (!course) notFound();
@@ -43,6 +43,14 @@ export default async function EditCoursePage({
     description: string | null;
     published: boolean;
     cover_path: string | null;
+    provider: string | null;
+    duration_text: string | null;
+    outcomes: string[] | null;
+    syllabus: string[] | null;
+    ttd_image_path: string | null;
+    ttd_name: string | null;
+    ttd_title: string | null;
+    certificate_enabled: boolean;
   };
 
   const { data: codeRow } = await supabase
@@ -190,6 +198,14 @@ export default async function EditCoursePage({
             published: c.published,
             cover_path: c.cover_path,
             enrollCode: (codeRow as { code: string } | null)?.code ?? null,
+            provider: c.provider,
+            durationText: c.duration_text,
+            outcomes: c.outcomes ?? [],
+            syllabus: c.syllabus ?? [],
+            ttdName: c.ttd_name,
+            ttdTitle: c.ttd_title,
+            ttdImagePath: c.ttd_image_path,
+            certificateEnabled: c.certificate_enabled,
           }}
         />
       </section>

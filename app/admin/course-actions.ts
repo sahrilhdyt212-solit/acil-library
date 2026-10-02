@@ -51,6 +51,23 @@ export interface SaveCourseInput {
   published: boolean;
   coverPath?: string | null;
   enrollCode?: string | null;
+  // ── Sertifikat (opsional) ──
+  provider?: string | null;
+  durationText?: string | null;
+  outcomes?: string[];
+  syllabus?: string[];
+  ttdImagePath?: string | null;
+  ttdName?: string | null;
+  ttdTitle?: string | null;
+  certificateEnabled?: boolean;
+}
+
+function cleanLines(values: string[] | undefined, maxEach: number): string[] {
+  if (!values) return [];
+  return values
+    .map((v) => v.trim().replace(/\s+/g, " ").slice(0, maxEach))
+    .filter(Boolean)
+    .slice(0, 20);
 }
 
 /** Buat / ubah kursus + sinkron kode enroll (kolom requires_code ikut dijaga). */
@@ -63,6 +80,16 @@ export async function saveCourseAction(input: SaveCourseInput): Promise<CourseAc
     if (!slug) return { ok: false, error: "Slug tidak valid." };
 
     let id = input.id;
+    const certPatch: Record<string, unknown> = {
+      provider: input.provider?.trim() || null,
+      duration_text: input.durationText?.trim() || null,
+      outcomes: cleanLines(input.outcomes, 300),
+      syllabus: cleanLines(input.syllabus, 300),
+      ttd_image_path: input.ttdImagePath ?? null,
+      ttd_name: input.ttdName?.trim() || null,
+      ttd_title: input.ttdTitle?.trim() || null,
+      certificate_enabled: input.certificateEnabled ?? true,
+    };
     if (id) {
       const { error } = await supabase
         .from("courses")
@@ -72,6 +99,7 @@ export async function saveCourseAction(input: SaveCourseInput): Promise<CourseAc
           description: input.description?.trim() || null,
           published: input.published,
           cover_path: input.coverPath ?? null,
+          ...certPatch,
         })
         .eq("id", id);
       if (error) {
@@ -89,6 +117,7 @@ export async function saveCourseAction(input: SaveCourseInput): Promise<CourseAc
           description: input.description?.trim() || null,
           published: input.published,
           cover_path: input.coverPath ?? null,
+          ...certPatch,
         })
         .select("id")
         .single();

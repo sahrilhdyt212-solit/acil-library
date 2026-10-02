@@ -67,6 +67,34 @@ export interface Course {
   updated_at: string;
   /** Jumlah langkah (diisi runtime). */
   step_count?: number;
+  // ── Sertifikat (diisi manual admin per kursus) ──
+  provider?: string | null;
+  duration_text?: string | null;
+  outcomes?: string[] | null;
+  syllabus?: string[] | null;
+  ttd_image_path?: string | null;
+  ttd_image_url?: string | null;
+  ttd_name?: string | null;
+  ttd_title?: string | null;
+  certificate_enabled?: boolean;
+}
+
+export interface ReaderProfile {
+  user_id: string;
+  full_name: string | null;
+  institution: string | null;
+}
+
+export interface Certificate {
+  id: string;
+  code: string;
+  user_id: string;
+  course_id: string;
+  name_snapshot: string;
+  course_title_snapshot: string;
+  provider_snapshot: string | null;
+  avg_score: number | null;
+  issued_at: string;
 }
 
 export interface CourseStepBook {

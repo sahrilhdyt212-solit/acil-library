@@ -40,6 +40,14 @@ export default async function NewCoursePage() {
             published: false,
             cover_path: null,
             enrollCode: null,
+            provider: "ACIL LIBRARY",
+            durationText: null,
+            outcomes: [],
+            syllabus: [],
+            ttdName: null,
+            ttdTitle: null,
+            ttdImagePath: null,
+            certificateEnabled: true,
           }}
         />
       </div>
