@@ -58,7 +58,7 @@ export default async function AdminSettingsPage() {
         <h2 id="storage" className="font-serif text-lg font-bold">Penyimpanan</h2>
         <p className="mt-1 text-sm text-stone-600">
           Bucket yang dibutuhkan: <code>book-covers</code> dan{" "}
-          <code>book-pdfs</code> (boleh publik maupun privat — pembacaan memakai
+          <code>book-pdfs</code> (boleh publik maupun privat, pembacaan memakai
           URL bertanda yang dibuat server).
         </p>
         <ul className="mt-4 space-y-2">

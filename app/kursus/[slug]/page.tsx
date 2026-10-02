@@ -143,7 +143,7 @@ export default async function CourseDetailPage({
                     href={`/kursus/${course.slug}/langkah/${resume.position}`}
                     className="mt-4 inline-flex h-11 items-center rounded-full bg-ink px-7 text-sm font-medium text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
-                    Lanjut: Langkah {resume.position} — {resume.title}
+                    Lanjut: Langkah {resume.position} · {resume.title}
                   </Link>
                 ) : (
                   <p className="mt-4 text-sm font-medium text-green-800">
@@ -174,7 +174,7 @@ export default async function CourseDetailPage({
           Silabus
         </h2>
         <p className="mt-1 text-sm text-stone-600">
-          Langkah harus dikerjakan berurutan — yang terkunci terbuka setelah langkah sebelumnya selesai.
+          Langkah harus dikerjakan berurutan, yang terkunci terbuka setelah langkah sebelumnya selesai.
         </p>
         <ol className="mt-4 space-y-2">
           {steps.map((s) => {
@@ -231,7 +231,7 @@ export default async function CourseDetailPage({
         </ol>
         {!enrollment && (
           <p className="mt-3 text-sm text-stone-600">
-            Daftar untuk membuka langkah — video hanya bisa ditonton setelah masuk dan mendaftar.
+            Daftar untuk membuka langkah, video hanya bisa ditonton setelah masuk dan mendaftar.
           </p>
         )}
       </section>

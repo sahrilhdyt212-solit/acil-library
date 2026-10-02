@@ -167,7 +167,7 @@ export function QuizBuilder({
             ))}
             {questions.length === 0 && (
               <li className="border border-dashed border-line px-4 py-6 text-center text-sm text-stone-600">
-                Belum ada soal. Tambah di bawah — minimal 2 opsi, tepat 1 benar.
+                Belum ada soal. Tambah di bawah, minimal 2 opsi, tepat 1 benar.
               </li>
             )}
           </ol>

@@ -145,7 +145,7 @@ export function LibraryExplorer({
         <EmptyState
           icon={LibraryBig}
           title="Belum ada buku di sini."
-          description="Coba kata kunci atau kategori lain — koleksi baru akan segera hadir."
+          description="Coba kata kunci atau kategori lain, koleksi baru akan segera hadir."
           className="mt-4"
         />
       ) : (

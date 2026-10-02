@@ -92,7 +92,7 @@ export default async function AdminDashboard() {
                 <div className="min-w-0">
                   <p className="truncate font-medium">{b.title}</p>
                   <p className="truncate text-xs text-stone-500">
-                    {b.author} · {cat?.name ?? "—"} · {formatDate(b.created_at)}
+                    {b.author} · {cat?.name ?? "-"} · {formatDate(b.created_at)}
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2 text-[11px] font-semibold uppercase tracking-wider">

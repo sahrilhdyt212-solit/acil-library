@@ -97,7 +97,7 @@ export default async function StepPage({
             <Lock className="mx-auto h-8 w-8 text-stone-400" aria-hidden="true" />
             <p className="mt-3 font-serif text-xl">Selesaikan langkah sebelumnya dulu.</p>
             <p className="mx-auto mt-1 max-w-md text-sm text-stone-600">
-              Langkah harus dikerjakan berurutan — langkah kuis baru selesai kalau nilaimu lulus.
+              Langkah harus dikerjakan berurutan, langkah kuis baru selesai kalau nilaimu lulus.
             </p>
             {prev && (
               <Link
@@ -131,7 +131,7 @@ export default async function StepPage({
                 )}
                 {step.completed && (
                   <p role="status" className="mt-4 text-sm font-medium text-green-800">
-                    Sudah selesai ✓ — lanjut ke langkah berikut di bawah.
+                    Sudah selesai ✓, lanjut ke langkah berikut di bawah.
                   </p>
                 )}
               </section>
@@ -189,7 +189,7 @@ export default async function StepPage({
                 )}
                 {step.completed && (
                   <p role="status" className="mt-4 text-sm font-medium text-green-800">
-                    Sudah selesai ✓ — lanjut ke langkah berikut di bawah.
+                    Sudah selesai ✓, lanjut ke langkah berikut di bawah.
                   </p>
                 )}
               </section>

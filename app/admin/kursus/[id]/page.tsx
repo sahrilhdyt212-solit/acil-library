@@ -220,7 +220,7 @@ export default async function EditCoursePage({
         return (
           <section key={s.id} aria-label={`Kuis langkah ${s.position}`} className="mt-8">
             <h2 className="mb-3 font-serif text-xl font-bold">
-              Kuis — L{s.position}: {s.title}
+              Kuis · L{s.position}: {s.title}
             </h2>
             <QuizBuilder
               stepId={s.id}

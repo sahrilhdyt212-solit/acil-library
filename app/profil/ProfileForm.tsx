@@ -69,7 +69,7 @@ export function ProfileForm({
     <form onSubmit={onSubmit} className="mt-6 space-y-4 border border-line bg-white p-6">
       {!emailConfirmed && (
         <div role="status" className="border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-          Email <strong>{email}</strong> belum diverifikasi — sertifikat butuh email valid.{" "}
+          Email <strong>{email}</strong> belum diverifikasi, sertifikat butuh email valid.{" "}
           {resent ? (
             <>Link verifikasi dikirim ulang. Cek inbox/spam.</>
           ) : (
@@ -86,7 +86,7 @@ export function ProfileForm({
       )}
       {reason === "sertifikat" && (
         <p role="status" className="border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-          Satu langkah lagi: isi nama lengkap sesuai identitas — nama inilah yang tercetak di sertifikatmu (tersimpan permanen sebagai snapshot).
+          Satu langkah lagi: isi nama lengkap sesuai identitas, nama inilah yang tercetak di sertifikatmu (tersimpan permanen sebagai snapshot).
         </p>
       )}
       <div className="space-y-1.5">

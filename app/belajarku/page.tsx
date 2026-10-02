@@ -54,7 +54,7 @@ export default async function BelajarkuPage() {
           <BookOpen className="h-8 w-8 text-stone-400" aria-hidden="true" />
           <p className="font-serif text-xl">Kamu belum ikut kursus apapun.</p>
           <p className="max-w-sm text-sm text-stone-600">
-            Pilih kursus dan daftar — ada yang gratis, ada yang butuh kode dari admin.
+            Pilih kursus dan daftar, ada yang gratis, ada yang butuh kode dari admin.
           </p>
           <Link
             href="/kursus"

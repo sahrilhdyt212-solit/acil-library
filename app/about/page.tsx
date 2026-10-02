@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Tentang",
   description:
-    "Tentang Acil Library — arsip bacaan digital publik berisi buku pilihan hukum, fiksi hukum, dan politik.",
+    "Tentang Acil Library: arsip bacaan digital publik berisi buku pilihan hukum, fiksi hukum, dan politik.",
 };
 
 export default function AboutPage() {
@@ -19,7 +19,7 @@ export default function AboutPage() {
       <div className="mt-8 space-y-5 text-[15px] leading-relaxed text-stone-700">
         <p>
           <strong className="font-serif text-lg text-ink">Acil Library</strong> adalah
-          perpustakaan digital publik — arsip kurasi berisi buku, gagasan, hukum,
+          perpustakaan digital publik, arsip kurasi berisi buku, gagasan, hukum,
           dan pengetahuan. Koleksinya tersusun dalam tiga rak:{" "}
           <Link className="underline decoration-accent underline-offset-4" href="/category/novel-hukum">Novel Hukum</Link>,{" "}
           <Link className="underline decoration-accent underline-offset-4" href="/category/hukum">Hukum</Link>, dan{" "}
@@ -31,7 +31,7 @@ export default function AboutPage() {
           mengizinkannya, kamu juga bisa mengunduh PDF untuk disimpan.
         </p>
         <p>
-          Tanpa akun, tanpa paywall, tanpa kebisingan — hanya sampul,
+          Tanpa akun, tanpa paywall, tanpa kebisingan, hanya sampul,
           judul, penulis, dan halaman.
         </p>
         <h2 className="pt-4 font-serif text-2xl font-bold text-ink">Cara memakai perpustakaan</h2>

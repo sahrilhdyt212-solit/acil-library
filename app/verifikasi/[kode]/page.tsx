@@ -15,7 +15,7 @@ export async function generateMetadata({
   const cert = await verifyCertificate(kode);
   if (!cert.found) return { title: "Verifikasi sertifikat", robots: { index: false } };
   return {
-    title: `Sertifikat ${cert.name} — ${cert.course}`,
+    title: `Sertifikat ${cert.name}: ${cert.course}`,
     description: `Verifikasi sertifikat ${cert.code} atas nama ${cert.name} untuk kursus ${cert.course}.`,
   };
 }
@@ -50,13 +50,13 @@ export default async function VerifikasiPage({
             <div>
               <dt className="text-xs uppercase tracking-wider text-stone-500">Terbit</dt>
               <dd className="mt-0.5 font-medium">
-                {cert.issued_at ? formatTanggalID(cert.issued_at) : "—"}
+                {cert.issued_at ? formatTanggalID(cert.issued_at) : "-"}
               </dd>
             </div>
             <div>
               <dt className="text-xs uppercase tracking-wider text-stone-500">Nilai</dt>
               <dd className="mt-0.5 font-medium tabular-nums">
-                {cert.avg_score !== null && cert.avg_score !== undefined ? `${cert.avg_score}%` : "—"}
+                {cert.avg_score !== null && cert.avg_score !== undefined ? `${cert.avg_score}%` : "-"}
               </dd>
             </div>
           </dl>
@@ -73,7 +73,7 @@ export default async function VerifikasiPage({
           <h1 className="mt-4 font-serif text-2xl font-bold">Kode tidak ditemukan</h1>
           <p className="mx-auto mt-2 max-w-md text-sm text-stone-600">
             Tidak ada sertifikat dengan kode <code className="bg-mist px-1 font-mono">{kode}</code>.
-            Periksa lagi kodenya — formatnya <code className="bg-mist px-1 font-mono">ACIL-XXXXXX</code>.
+            Periksa lagi kodenya, formatnya <code className="bg-mist px-1 font-mono">ACIL-XXXXXX</code>.
           </p>
           <Link
             href="/kursus"

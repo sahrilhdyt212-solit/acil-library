@@ -6,7 +6,7 @@ export default function NotFound() {
     <main className="mx-auto flex max-w-xl flex-1 flex-col items-center justify-center px-4 py-20 text-center">
       <BookOpen className="h-10 w-10 text-stone-400" aria-hidden="true" />
       <p className="mt-4 text-xs font-semibold uppercase tracking-[0.24em] text-stone-500">
-        404 — Tersesat di rak
+        404: Tersesat di rak
       </p>
       <h1 className="mt-2 font-serif text-4xl font-bold tracking-tight">
         Halaman ini tidak ada di rak.

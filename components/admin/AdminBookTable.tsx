@@ -100,14 +100,14 @@ export function AdminBookTable({ books }: { books: AdminBookRow[] }) {
                     </span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-stone-600">{b.category?.name ?? "—"}</td>
+                <td className="px-4 py-3 text-stone-600">{b.category?.name ?? "-"}</td>
                 <td className="whitespace-nowrap px-4 py-3">
                   <span className="flex flex-col gap-1 text-[11px] font-semibold uppercase tracking-wider">
                     <span className={b.cover_path ? "text-green-700" : "text-stone-400"}>
-                      {b.cover_path ? "✓ Sampul" : "— Tanpa sampul"}
+                      {b.cover_path ? "✓ Sampul" : "Tanpa sampul"}
                     </span>
                     <span className={b.pdf_path ? "text-green-700" : "text-stone-400"}>
-                      {b.pdf_path ? "✓ PDF" : "— Tanpa PDF"}
+                      {b.pdf_path ? "✓ PDF" : "Tanpa PDF"}
                     </span>
                   </span>
                 </td>
@@ -188,9 +188,9 @@ export function AdminBookTable({ books }: { books: AdminBookRow[] }) {
               </span>
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">{b.title}</p>
-                <p className="truncate text-xs text-stone-500">{b.author} · {b.category?.name ?? "—"}</p>
+                <p className="truncate text-xs text-stone-500">{b.author} · {b.category?.name ?? "-"}</p>
                 <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-stone-600">
-                  {b.cover_path ? "✓ Sampul" : "— Tanpa sampul"} · {b.pdf_path ? "✓ PDF" : "— Tanpa PDF"}
+                  {b.cover_path ? "✓ Sampul" : "Tanpa sampul"} · {b.pdf_path ? "✓ PDF" : "Tanpa PDF"}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button

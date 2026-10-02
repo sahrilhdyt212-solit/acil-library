@@ -7,7 +7,7 @@ import type { BookSortKey } from "@/types";
 export const metadata: Metadata = {
   title: "Perpustakaan",
   description:
-    "Jelajahi seluruh koleksi Acil Library — cari berdasarkan judul atau penulis, saring per kategori, dan urutkan rak.",
+    "Jelajahi seluruh koleksi Acil Library: cari berdasarkan judul atau penulis, saring per kategori, dan urutkan rak.",
 };
 
 export const revalidate = 60;

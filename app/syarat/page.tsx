@@ -27,7 +27,7 @@ export default function SyaratPage() {
           <h2 className="font-serif text-xl font-bold text-ink">2. Kursus</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>Langkah dikerjakan berurutan; langkah kuis lulus bila nilaimu mencapai batas.</li>
-            <li>Kode pendaftaran bersifat pribadi — jangan disebar bila pengajar membatasi.</li>
+            <li>Kode pendaftaran bersifat pribadi, jangan disebar bila pengajar membatasi.</li>
             <li>Sertifikat/penanda selesai mencerminkan aktivitas akunmu, bukan identitas resmi.</li>
           </ul>
         </section>

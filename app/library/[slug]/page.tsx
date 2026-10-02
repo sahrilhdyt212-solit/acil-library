@@ -23,17 +23,17 @@ export async function generateMetadata({
   const description =
     book.description?.slice(0, 160) ?? `Baca ${book.title} oleh ${book.author} di Acil Library.`;
   return {
-    title: `${book.title} — ${book.author}`,
+    title: `${book.title}: ${book.author}`,
     description,
     openGraph: {
-      title: `${book.title} — ${book.author}`,
+      title: `${book.title}: ${book.author}`,
       description,
       type: "article",
       ...(book.cover_url ? { images: [{ url: book.cover_url }] } : {}),
     },
     twitter: {
       card: "summary_large_image",
-      title: `${book.title} — ${book.author}`,
+      title: `${book.title}: ${book.author}`,
       description,
       ...(book.cover_url ? { images: [book.cover_url] } : {}),
     },
@@ -129,7 +129,7 @@ export default async function BookDetailPage({
               </a>
             )}
             <ShareButton
-              title={`${book.title} — ${book.author}`}
+              title={`${book.title}: ${book.author}`}
               text={book.description?.slice(0, 140)}
             />
           </div>
@@ -137,9 +137,9 @@ export default async function BookDetailPage({
           <dl className="mt-10 grid max-w-2xl grid-cols-2 gap-px border border-line bg-stone-200/60 text-sm sm:grid-cols-4">
             {[
               ["Penulis", book.author],
-              ["Kategori", book.category?.name ?? "—"],
-              ["Tahun", book.publication_year ? String(book.publication_year) : "—"],
-              ["Format", canRead ? "PDF" : "—"],
+              ["Kategori", book.category?.name ?? "-"],
+              ["Tahun", book.publication_year ? String(book.publication_year) : "-"],
+              ["Format", canRead ? "PDF" : "-"],
             ].map(([k, v]) => (
               <div key={k} className="bg-paper px-4 py-3">
                 <dt className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">

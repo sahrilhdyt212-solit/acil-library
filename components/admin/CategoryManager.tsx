@@ -92,7 +92,7 @@ export function CategoryManager({ categories, counts }: { categories: Category[]
 
       {categories.length === 0 ? (
         <p className="mt-4 border border-dashed border-line bg-white px-4 py-10 text-center text-sm text-stone-600">
-          Belum ada kategori — buat Novel Hukum, Hukum, dan Politik untuk memulai.
+          Belum ada kategori, buat Novel Hukum, Hukum, dan Politik untuk memulai.
         </p>
       ) : (
         <ul className="mt-4 divide-y divide-line border border-line bg-white">

@@ -117,11 +117,11 @@ export function QuizRunner({ data }: { data: QuizRunnerData }) {
             {result.passed ? (
               <>
                 <strong>Lulus! Nilai {result.score}</strong> ({result.correct}/{result.total} benar).
-                Langkah ini selesai — lanjut ke langkah berikut.
+                Langkah ini selesai, lanjut ke langkah berikut.
               </>
             ) : (
               <>
-                <strong>Belum lulus — nilai {result.score}</strong> ({result.correct}/{result.total} benar,
+                <strong>Belum lulus, nilai {result.score}</strong> ({result.correct}/{result.total} benar,
                 butuh {quiz.pass_score}). Pelajari lagi videonya, lalu coba lagi.
               </>
             )}

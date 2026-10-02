@@ -31,11 +31,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(base),
     title: {
-      default: "Acil Library — Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan",
+      default: "Acil Library: Perpustakaan digital kurasi berisi buku, ide, hukum, dan pengetahuan",
       template: "%s · Acil Library",
     },
     description:
-      "Acil Library adalah arsip bacaan digital publik. Jelajahi buku pilihan Novel Hukum, Hukum, dan Politik — buka buku dan baca gratis di peramban.",
+      "Acil Library adalah arsip bacaan digital publik. Jelajahi buku pilihan Novel Hukum, Hukum, dan Politik, buka buku dan baca gratis di peramban.",
     openGraph: {
       type: "website",
       siteName: "Acil Library",

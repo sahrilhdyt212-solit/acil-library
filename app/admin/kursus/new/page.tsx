@@ -28,7 +28,7 @@ export default async function NewCoursePage() {
       </Link>
       <h1 className="mt-3 font-serif text-3xl font-bold tracking-tight">Kursus baru</h1>
       <p className="mt-1 text-sm text-stone-600">
-        Isi info dasar dulu — langkah, kuis, dan kode diatur setelah kursus dibuat.
+        Isi info dasar dulu, langkah, kuis, dan kode diatur setelah kursus dibuat.
       </p>
       <div className="mt-6">
         <CourseForm

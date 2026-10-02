@@ -28,7 +28,7 @@ export function MarkCompleteButton({ stepId }: { stepId: string }) {
   if (done) {
     return (
       <p role="status" className="inline-flex items-center gap-1.5 text-sm font-medium text-green-800">
-        <Check className="h-4 w-4" aria-hidden="true" /> Selesai — lanjut ke langkah berikut.
+        <Check className="h-4 w-4" aria-hidden="true" /> Selesai, lanjut ke langkah berikut.
       </p>
     );
   }

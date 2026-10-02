@@ -6,7 +6,7 @@ import { CoverImage } from "@/components/books/CoverImage";
 
 export const metadata: Metadata = {
   title: "Kursus",
-  description: "Ikuti jalur belajar terstruktur: tonton video, baca buku, kerjakan kuis, dan diskusi — langkah demi langkah.",
+  description: "Ikuti jalur belajar terstruktur: tonton video, baca buku, kerjakan kuis, dan diskusi, langkah demi langkah.",
 };
 
 export const dynamic = "force-dynamic";
@@ -29,7 +29,7 @@ export default async function KursusPage() {
       </h1>
       <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-stone-600">
         Setiap kursus berisi langkah berurutan: video (wajib masuk), bacaan buku,
-        kuis dengan nilai lulus, dan diskusi. Buku tetap bebas dibaca — yang
+        kuis dengan nilai lulus, dan diskusi. Buku tetap bebas dibaca, yang
         dikunci hanya video dan progresnya.
       </p>
 

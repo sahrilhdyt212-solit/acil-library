@@ -198,7 +198,7 @@ export function CourseForm({ initial, mode }: { initial: CourseFormInitial; mode
           </Button>
         </div>
         <p className="text-xs text-stone-500">
-          Minimal 8 karakter, jangan pakai kata gampang ditebak. Kode tidak pernah ditampilkan ke publik — hanya dicek di server, dan terkunci 15 menit setelah 5x salah.
+          Minimal 8 karakter, jangan pakai kata gampang ditebak. Kode tidak pernah ditampilkan ke publik, hanya dicek di server, dan terkunci 15 menit setelah 5x salah.
         </p>
       </div>
       <label className="flex cursor-pointer items-center gap-2.5 text-sm">

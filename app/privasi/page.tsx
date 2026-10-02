@@ -34,7 +34,7 @@ export default function PrivasiPage() {
         <section>
           <h2 className="font-serif text-xl font-bold text-ink">3. Siapa yang bisa lihat</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5">
-            <li>Emailmu tidak pernah ditampilkan ke pengguna lain — di diskusi kamu tampil sebagai “Peserta”.</li>
+            <li>Emailmu tidak pernah ditampilkan ke pengguna lain, di diskusi kamu tampil sebagai “Peserta”.</li>
             <li>Komentar yang kamu tulis bisa dibaca peserta kursus yang sama.</li>
             <li>Admin (pustakawan) bisa melihat data operasional untuk moderasi.</li>
           </ul>

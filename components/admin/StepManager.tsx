@@ -148,7 +148,7 @@ export function StepManager({
                       onChange={(e) => setEditBook(e.target.value)}
                       className="h-10 w-full border border-line bg-white px-3 text-sm"
                     >
-                      <option value="">— Pilih buku —</option>
+                      <option value="">Pilih buku</option>
                       {books.map((b) => (
                         <option key={b.id} value={b.id}>{b.title}</option>
                       ))}
@@ -235,7 +235,7 @@ export function StepManager({
           <div className="space-y-1.5">
             <Label>Buku</Label>
             <select value={bookId} onChange={(e) => setBookId(e.target.value)} className="h-10 w-full border border-line bg-white px-3 text-sm">
-              <option value="">— Pilih buku —</option>
+              <option value="">Pilih buku</option>
               {books.map((b) => (
                 <option key={b.id} value={b.id}>{b.title}</option>
               ))}

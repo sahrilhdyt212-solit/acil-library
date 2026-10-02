@@ -23,7 +23,7 @@ export default function Error({
         Perpustakaan tersandung.
       </h1>
       <p className="mt-3 text-sm leading-relaxed text-stone-600">
-        Halaman ini tidak bisa dimuat. Silakan coba lagi — jika masalah berlanjut,
+        Halaman ini tidak bisa dimuat. Silakan coba lagi, jika masalah berlanjut,
         koleksi mungkin sedang tidak tersedia.
       </p>
       <div className="mt-6 flex gap-3">

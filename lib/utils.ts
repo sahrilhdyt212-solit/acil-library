@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(date: string | null | undefined): string {
-  if (!date) return "—";
+  if (!date) return "-";
   try {
     return new Intl.DateTimeFormat("id-ID", {
       day: "numeric",
@@ -14,7 +14,7 @@ export function formatDate(date: string | null | undefined): string {
       year: "numeric",
     }).format(new Date(date));
   } catch {
-    return "—";
+    return "-";
   }
 }
 

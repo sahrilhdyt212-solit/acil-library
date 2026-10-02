@@ -93,7 +93,7 @@ export function ClaimButton({
       </Button>
       {needVerification && (
         <div role="alert" className="mt-2 border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-          Emailmu belum diverifikasi — sertifikat butuh identitas email yang valid.{" "}
+          Emailmu belum diverifikasi, sertifikat butuh identitas email yang valid.{" "}
           {resent ? (
             <>Link verifikasi dikirim ulang. Cek inbox/spam, lalu klik klaim lagi.</>
           ) : (

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Acil Library — Perpustakaan Digital",
+    name: "Acil Library: Perpustakaan Digital",
     short_name: "Acil",
     description:
       "Perpustakaan digital kurasi berisi buku, gagasan, hukum, dan pengetahuan. Gratis dibaca di peramban.",

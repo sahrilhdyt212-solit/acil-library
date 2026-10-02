@@ -105,7 +105,7 @@ export function BookForm({
       }
       if (pdfFile && pdfFile.size > 0) {
         setStatus(
-          `Mengunggah PDF (${(pdfFile.size / 1024 / 1024).toFixed(1)} MB) — bisa agak lama…`
+          `Mengunggah PDF (${(pdfFile.size / 1024 / 1024).toFixed(1)} MB), bisa agak lama…`
         );
         ({ path: pdf_path } = await uploadDirect(formId, pdfFile, "pdf"));
       }
@@ -236,12 +236,12 @@ export function BookForm({
                 </span>
                 <p className="text-xs text-stone-600">
                   Sampul saat ini tersimpan. Jika di atas tampil placeholder,
-                  berkasnya tidak bisa dijangkau — unggah pengganti.
+                  berkasnya tidak bisa dijangkau, unggah pengganti.
                 </p>
               </div>
             )}
             <Input id="cover" name="cover" type="file" accept="image/jpeg,image/png,image/webp" />
-            <p className="text-xs text-stone-600">JPG, PNG, atau WEBP — maks 5 MB. Dikompresi otomatis di peramban.</p>
+            <p className="text-xs text-stone-600">JPG, PNG, atau WEBP: maks 5 MB. Dikompresi otomatis di peramban.</p>
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="pdf">Berkas PDF {mode === "create" ? "" : "(kosongkan untuk memakai yang sekarang)"}</Label>
@@ -253,7 +253,7 @@ export function BookForm({
               </p>
             )}
             <Input id="pdf" name="pdf" type="file" accept="application/pdf" />
-            <p className="text-xs text-stone-600">Hanya PDF — maks 100 MB.</p>
+            <p className="text-xs text-stone-600">Hanya PDF: maks 100 MB.</p>
           </div>
         </div>
         {status && (

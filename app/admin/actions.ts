@@ -394,7 +394,7 @@ export async function deleteCategoryAction(id: string): Promise<{ ok: boolean; e
   if ((count ?? 0) > 0)
     return {
       ok: false,
-      error: `Tidak bisa dihapus — ${count} buku masih memakai kategori ini. Pindahkan dulu bukunya.`,
+      error: `Tidak bisa dihapus, ${count} buku masih memakai kategori ini. Pindahkan dulu bukunya.`,
     };
   const { error } = await supabase.from("categories").delete().eq("id", id);
   if (error) return { ok: false, error: error.message };

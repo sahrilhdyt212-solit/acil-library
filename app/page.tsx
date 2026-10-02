@@ -64,7 +64,7 @@ export default async function HomePage() {
         </div>
         {!configured && (
           <p className="mx-auto mt-6 max-w-md border border-dashed border-line bg-mist p-3 text-xs leading-relaxed text-stone-600">
-            Supabase belum dikonfigurasi — hubungkan{" "}
+            Supabase belum dikonfigurasi, hubungkan{" "}
             <code>NEXT_PUBLIC_SUPABASE_URL</code> dan{" "}
             <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> untuk memuat koleksi
             langsung. Lihat README untuk panduan.
@@ -211,12 +211,12 @@ export default async function HomePage() {
       <section className="bg-[#141210] text-stone-300">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-24">
           <p className="font-serif text-2xl italic leading-relaxed text-paper sm:text-3xl">
-            “Masuk, temukan, buka buku — lalu baca.”
+            “Masuk, temukan, buka buku, lalu baca.”
           </p>
           <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-stone-400">
             Acil Library adalah ruang baca terbuka. Setiap judul dikurasi,
             setiap halaman gratis dibuka di peramban. Tanpa akun, tanpa
-            hambatan — hanya buku.
+            hambatan, hanya buku.
           </p>
           <ArrowLink href="/library" className="mt-6 text-paper hover:text-paper">
             Mulai membaca
