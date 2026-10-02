@@ -36,6 +36,9 @@ export async function GET(
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect(`/masuk?next=${encodeURIComponent(`/kursus/${slug}`)}`);
+  if (!user.email_confirmed_at) {
+    redirect(`/profil?reason=verifikasi&next=${encodeURIComponent(`/kursus/${slug}`)}`);
+  }
 
   const { data: course } = await supabase
     .from("courses")

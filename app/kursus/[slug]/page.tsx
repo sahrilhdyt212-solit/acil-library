@@ -158,6 +158,7 @@ export default async function CourseDetailPage({
                         courseId={course.id}
                         courseSlug={course.slug}
                         existingCode={myCert?.code ?? null}
+                        email={user?.email ?? null}
                       />
                     </div>
                   </div>

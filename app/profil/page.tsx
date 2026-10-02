@@ -40,6 +40,8 @@ export default async function ProfilPage({
             institution: profile?.institution ?? "",
           }}
           reason={reason ?? null}
+          email={user.email ?? ""}
+          emailConfirmed={Boolean(user.email_confirmed_at)}
         />
       </Suspense>
     </main>

@@ -159,13 +159,20 @@ export async function moderateCommentAction(
  */
 export async function claimCertificateAction(
   courseId: string
-): Promise<ActionResult & { needProfile?: boolean }> {
+): Promise<ActionResult & { needProfile?: boolean; needVerification?: boolean }> {
   try {
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) return { ok: false, error: "Harus masuk dulu." };
+    if (!user.email_confirmed_at) {
+      return {
+        ok: false,
+        needVerification: true,
+        error: "Verifikasi dulu emailmu lewat link yang dikirim saat daftar.",
+      };
+    }
     const { data, error } = await supabase.rpc("claim_certificate", {
       p_course_id: courseId,
     });
