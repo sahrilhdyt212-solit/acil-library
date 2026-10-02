@@ -11,7 +11,7 @@ export {
 } from "@/lib/file-validation";
 export type { UploadValidation } from "@/lib/file-validation";
 
-export { COVER_BUCKET, PDF_BUCKET } from "@/lib/buckets";
+export { COVER_BUCKET, PDF_BUCKET, COURSE_COVER_BUCKET } from "@/lib/buckets";
 
 /** Best-effort removal — logs instead of throwing so callers keep the new valid file. */
 export async function removeFile(

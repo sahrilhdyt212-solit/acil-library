@@ -1,5 +1,6 @@
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/server";
 import { getSignedCoverUrl } from "@/lib/data";
+import { COURSE_COVER_BUCKET } from "@/lib/buckets";
 import type {
   Course,
   CourseStep,
@@ -69,7 +70,7 @@ export async function getCourses(): Promise<Course[]> {
       (data as Record<string, unknown>[]).map(async (r) => {
         const c = toCourse(r);
         c.step_count = counts.get(c.id) ?? 0;
-        c.cover_url = await getSignedCoverUrl(c.cover_path);
+        c.cover_url = await getSignedCoverUrl(c.cover_path, COURSE_COVER_BUCKET);
         return c;
       })
     );
@@ -133,7 +134,7 @@ export async function getCourseDetail(
       .single();
     if (error || !courseRow) return null;
     const course = toCourse(courseRow as unknown as Record<string, unknown>);
-    course.cover_url = await getSignedCoverUrl(course.cover_path);
+    course.cover_url = await getSignedCoverUrl(course.cover_path, COURSE_COVER_BUCKET);
 
     const { data: stepRows } = await supabase
       .from("course_steps")
@@ -350,7 +351,7 @@ export async function getMyEnrollments(userId: string): Promise<Enrollment[]> {
               slug: raw.slug,
               description: raw.description,
               cover_path: raw.cover_path,
-              cover_url: await getSignedCoverUrl(raw.cover_path),
+              cover_url: await getSignedCoverUrl(raw.cover_path, COURSE_COVER_BUCKET),
             }
           : null,
         total_steps: ids.length,

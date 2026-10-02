@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { validateCover } from "@/lib/file-validation";
-import { uploadCoverDirect } from "@/components/admin/direct-upload";
+import { uploadCourseCoverDirect } from "@/components/admin/direct-upload";
 
 function generateId(): string {
   const c = globalThis.crypto as Crypto | undefined;
@@ -38,7 +38,16 @@ export function CourseForm({ initial, mode }: { initial: CourseFormInitial; mode
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [code, setCode] = useState(initial.enrollCode ?? "");
   const [formId] = useState(() => initial.id ?? generateId());
+
+  /** Kode acak 10 karakter (huruf+angka tanpa yg ambigu). */
+  function randomCode() {
+    const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+    const buf = new Uint32Array(10);
+    globalThis.crypto.getRandomValues(buf);
+    setCode(Array.from(buf, (n) => alphabet[n % alphabet.length]).join(""));
+  }
 
   function onTitleChange(v: string) {
     setTitle(v);
@@ -63,7 +72,7 @@ export function CourseForm({ initial, mode }: { initial: CourseFormInitial; mode
           return;
         }
         setStatus("Mengunggah sampul…");
-        const up = await uploadCoverDirect(formId, coverFile, (m) => setStatus(m));
+        const up = await uploadCourseCoverDirect(formId, coverFile, (m) => setStatus(m));
         coverPath = up.originalPath;
       }
 
@@ -120,8 +129,23 @@ export function CourseForm({ initial, mode }: { initial: CourseFormInitial; mode
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="enrollCode">Kode pendaftaran (kosongkan = bebas daftar)</Label>
-        <Input id="enrollCode" name="enrollCode" defaultValue={initial.enrollCode ?? ""} autoComplete="off" placeholder="mis. HUKUM-2026" />
-        <p className="text-xs text-stone-500">Kode tidak pernah ditampilkan ke publik — hanya dicek di server.</p>
+        <div className="flex gap-2">
+          <Input
+            id="enrollCode"
+            name="enrollCode"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            autoComplete="off"
+            placeholder="mis. HUKUM-2026"
+            className="flex-1"
+          />
+          <Button type="button" onClick={randomCode} className="h-10 shrink-0 bg-white px-4 text-sm text-ink hover:bg-stone-100">
+            Acak
+          </Button>
+        </div>
+        <p className="text-xs text-stone-500">
+          Minimal 8 karakter, jangan pakai kata gampang ditebak. Kode tidak pernah ditampilkan ke publik — hanya dicek di server, dan terkunci 15 menit setelah 5x salah.
+        </p>
       </div>
       <label className="flex cursor-pointer items-center gap-2.5 text-sm">
         <input type="checkbox" name="published" defaultChecked={initial.published} className="h-4 w-4 accent-[#1d1d1f]" />

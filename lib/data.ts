@@ -119,13 +119,14 @@ export async function attachSignedCovers<T extends CoverHolder>(
 
 /** Signed display URL for a single cover path (null when unavailable). */
 export async function getSignedCoverUrl(
-  path: string | null | undefined
+  path: string | null | undefined,
+  bucket: string = COVER_BUCKET
 ): Promise<string | null> {
   if (!path || !isSupabaseConfigured()) return null;
   try {
     const supabase = await createClient();
     const { data, error } = await supabase.storage
-      .from(COVER_BUCKET)
+      .from(bucket)
       .createSignedUrl(path, 3600);
     if (error || !data?.signedUrl) return null;
     return data.signedUrl;

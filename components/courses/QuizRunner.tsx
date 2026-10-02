@@ -11,11 +11,12 @@ export interface QuizRunnerData {
   questions: Array<QuizQuestion & { options: QuizOption[] }>;
   bestScore: number | null;
   stepCompleted: boolean;
+  attempts: Array<{ score: number; passed: boolean; created_at: string }>;
 }
 
 export function QuizRunner({ data }: { data: QuizRunnerData }) {
   const router = useRouter();
-  const { quiz, questions, bestScore, stepCompleted } = data;
+  const { quiz, questions, bestScore, stepCompleted, attempts } = data;
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -135,6 +136,39 @@ export function QuizRunner({ data }: { data: QuizRunnerData }) {
               : "Kumpulkan jawaban"}
         </Button>
       </form>
+
+      {attempts.length > 0 && (
+        <details className="mt-8 border border-line bg-white">
+          <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
+            Riwayat percobaan ({attempts.length})
+          </summary>
+          <ul className="border-t border-line px-4 py-2">
+            {attempts.map((a, i) => (
+              <li
+                key={`${a.created_at}-${i}`}
+                className="flex items-center justify-between gap-2 border-b border-line/60 py-2 text-sm last:border-0"
+              >
+                <span className="tabular-nums">
+                  Percobaan {attempts.length - i} · Nilai <strong>{a.score}</strong>
+                </span>
+                <span className="flex items-center gap-2 text-xs text-stone-500">
+                  {a.passed ? (
+                    <span className="font-medium text-green-800">lulus</span>
+                  ) : (
+                    <span>belum lulus</span>
+                  )}
+                  {new Date(a.created_at).toLocaleDateString("id-ID", {
+                    day: "numeric",
+                    month: "short",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </div>
   );
 }

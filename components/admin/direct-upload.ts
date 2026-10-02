@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { COVER_BUCKET, PDF_BUCKET } from "@/lib/buckets";
+import { COURSE_COVER_BUCKET, COVER_BUCKET, PDF_BUCKET } from "@/lib/buckets";
 import { friendlyStorageError } from "@/lib/file-validation";
 import {
   COVER_VARIANT_WIDTHS,
@@ -28,11 +28,13 @@ export interface CoverUploadResult {
 }
 
 /**
- * Upload a cover + its responsive variants (480/960/full) directly.
- * Skips variants that would upscale. Returns paths for the form.
+ * Upload a cover + its responsive variants (480/960/full) directly
+ * into a given bucket. Skips variants that would upscale.
+ * Returns paths for the form.
  */
-export async function uploadCoverDirect(
-  bookId: string,
+export async function uploadCoverToBucket(
+  bucket: string,
+  folderId: string,
   file: File,
   onStatus?: (msg: string) => void
 ): Promise<CoverUploadResult> {
@@ -43,16 +45,16 @@ export async function uploadCoverDirect(
   const ext = compressed.file.name.split(".").pop() || "webp";
 
   async function put(path: string, f: File): Promise<void> {
-    const { error } = await supabase.storage.from(COVER_BUCKET).upload(path, f, {
+    const { error } = await supabase.storage.from(bucket).upload(path, f, {
       contentType: f.type,
       upsert: true,
     });
     if (error) {
-      throw new Error(friendlyStorageError(COVER_BUCKET, "Unggah sampul", error.message));
+      throw new Error(friendlyStorageError(bucket, "Unggah sampul", error.message));
     }
   }
 
-  const originalPath = `${bookId}/cover-${stamp}.${ext}`;
+  const originalPath = `${folderId}/cover-${stamp}.${ext}`;
   say(`Mengunggah sampul (${(compressed.file.size / 1024 / 1024).toFixed(1)} MB)…`);
   await put(originalPath, compressed.file);
 
@@ -64,12 +66,33 @@ export async function uploadCoverDirect(
     say(`Menyiapkan ukuran ${target}px…`);
     const small = await resizeCoverWidth(compressed.file, target);
     if (!small) continue;
-    const path = `${bookId}/cover-${stamp}-${target}w.${small.file.name.split(".").pop() || "webp"}`;
+    const path = `${folderId}/cover-${stamp}-${target}w.${small.file.name.split(".").pop() || "webp"}`;
     await put(path, small.file);
     variants.push({ w: small.width, path });
   }
   variants.sort((a, b) => a.w - b.w);
   return { originalPath, variants };
+}
+
+/**
+ * Upload a cover + its responsive variants (480/960/full) directly.
+ * Skips variants that would upscale. Returns paths for the form.
+ */
+export async function uploadCoverDirect(
+  bookId: string,
+  file: File,
+  onStatus?: (msg: string) => void
+): Promise<CoverUploadResult> {
+  return uploadCoverToBucket(COVER_BUCKET, bookId, file, onStatus);
+}
+
+/** Upload sampul kursus ke bucket course-covers (tulis admin-only). */
+export async function uploadCourseCoverDirect(
+  courseId: string,
+  file: File,
+  onStatus?: (msg: string) => void
+): Promise<CoverUploadResult> {
+  return uploadCoverToBucket(COURSE_COVER_BUCKET, courseId, file, onStatus);
 }
 
 /**

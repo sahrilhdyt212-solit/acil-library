@@ -104,8 +104,8 @@ export async function saveCourseAction(input: SaveCourseInput): Promise<CourseAc
     // Kode enroll: kosong = hapus kode (kursus terbuka).
     const code = input.enrollCode?.trim() || null;
     if (code) {
-      if (code.length < 4 || code.length > 64) {
-        return { ok: false, error: "Kode minimal 4, maksimal 64 karakter." };
+      if (code.length < 8 || code.length > 64) {
+        return { ok: false, error: "Kode minimal 8, maksimal 64 karakter. Pakai tombol Acak bila bingung." };
       }
       const { error } = await supabase
         .from("course_enroll_codes")

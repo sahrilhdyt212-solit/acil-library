@@ -22,6 +22,7 @@ export function Footer() {
               <h3 className="mb-3 text-xs font-semibold text-ink">Jelajah</h3>
               <ul className="space-y-2">
                 <li><Link className="hover:text-ink hover:underline hover:underline-offset-4" href="/library">Perpustakaan</Link></li>
+                <li><Link className="hover:text-ink hover:underline hover:underline-offset-4" href="/kursus">Kursus</Link></li>
                 <li><Link className="hover:text-ink hover:underline hover:underline-offset-4" href="/search">Pencarian</Link></li>
               </ul>
             </div>
@@ -29,6 +30,8 @@ export function Footer() {
               <h3 className="mb-3 text-xs font-semibold text-ink">Perpustakaan</h3>
               <ul className="space-y-2">
                 <li><Link className="hover:text-ink hover:underline hover:underline-offset-4" href="/about">Tentang</Link></li>
+                <li><Link className="hover:text-ink hover:underline hover:underline-offset-4" href="/privasi">Privasi</Link></li>
+                <li><Link className="hover:text-ink hover:underline hover:underline-offset-4" href="/syarat">Syarat</Link></li>
                 <li><Link className="hover:text-ink hover:underline hover:underline-offset-4" href="/admin/login">Login pustakawan</Link></li>
               </ul>
             </div>

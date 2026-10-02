@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { BookOpen } from "lucide-react";
 import { getCourseDetail, getMyEnrollments, getReaderUser } from "@/lib/courses";
 import { CoverImage } from "@/components/books/CoverImage";
+import { DeleteAccountSection } from "./DeleteAccountSection";
 
 export const metadata: Metadata = {
   title: "Belajarku",
@@ -45,6 +46,7 @@ export default async function BelajarkuPage() {
       </h1>
       <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-stone-600">
         Lanjutkan kursusmu langkah demi langkah. Video, kuis, dan diskusi menunggu.
+        Masuk sebagai <strong>{user.email}</strong>.
       </p>
 
       {enrollments.length === 0 ? (
@@ -119,11 +121,13 @@ export default async function BelajarkuPage() {
                         : "Buka kursus"}
                   </Link>
                 </div>
-              </li>
-            );
-          })}
+          </li>
+          );
+        })}
         </ul>
       )}
+
+      <DeleteAccountSection email={user.email ?? ""} />
     </main>
   );
 }

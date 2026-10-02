@@ -6,3 +6,6 @@ export const COVER_BUCKET =
   process.env.NEXT_PUBLIC_COVER_BUCKET || "book-covers";
 export const PDF_BUCKET =
   process.env.NEXT_PUBLIC_PDF_BUCKET || "book-pdfs";
+/** Sampul kursus — bucket sendiri dgn tulis admin-only (migration-005). */
+export const COURSE_COVER_BUCKET =
+  process.env.NEXT_PUBLIC_COURSE_COVER_BUCKET || "course-covers";

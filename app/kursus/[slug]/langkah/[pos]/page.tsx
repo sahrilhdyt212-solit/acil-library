@@ -170,6 +170,11 @@ export default async function StepPage({
                       questions: quiz.questions,
                       bestScore: quiz.bestScore,
                       stepCompleted: Boolean(step.completed),
+                      attempts: quiz.attempts.map((a) => ({
+                        score: a.score,
+                        passed: a.passed,
+                        created_at: a.created_at,
+                      })),
                     }}
                   />
                 ) : (

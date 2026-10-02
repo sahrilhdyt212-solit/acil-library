@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getCourses(),
   ]);
 
-  const staticRoutes = ["", "/library", "/search", "/about", "/kursus"].map((route) => ({
+  const staticRoutes = ["", "/library", "/search", "/about", "/kursus", "/privasi", "/syarat"].map((route) => ({
     url: `${base}${route}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
