@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, BookOpen, Lock } from "lucide-react";
 import { getReaderUser, getStepDetail } from "@/lib/courses";
 import { getYouTubeId } from "@/lib/youtube";
+import { renderMarkdown } from "@/lib/markdown";
 import { VideoPlayer } from "@/components/courses/VideoPlayer";
 import { EnrollButton } from "@/components/courses/EnrollButton";
 import { MarkCompleteButton } from "@/components/courses/MarkCompleteButton";
@@ -33,6 +34,7 @@ export default async function StepPage({
 
   const totalSteps = Math.max(position, next?.position ?? position);
   const youtubeId = step.kind === "video" ? getYouTubeId(step.youtube_url) : null;
+  const articleHtml = step.kind === "article" ? await renderMarkdown(step.body) : "";
 
   return (
     <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:px-6">
@@ -52,6 +54,7 @@ export default async function StepPage({
       <p className="mt-4 text-xs font-semibold uppercase tracking-[0.24em] text-stone-600">
         {step.kind === "video" && "Tonton"}
         {step.kind === "book" && "Baca"}
+        {step.kind === "article" && "Pelajari"}
         {step.kind === "quiz" && "Kuis"}
         {step.kind === "discussion" && "Diskusi"}
       </p>
@@ -128,8 +131,7 @@ export default async function StepPage({
             )}
 
             {step.kind === "book" && (
-              <section aria-label="Bacaan" className="border border-line bg-white p-6">
-                {step.book ? (
+              <section aria-label="Bacaan" className="border border-line bg-white p-6">                {step.book ? (
                   <>
                     <p className="text-sm text-stone-600">Bacaan untuk langkah ini:</p>
                     <p className="mt-1 font-serif text-xl font-bold">{step.book.title}</p>
@@ -156,6 +158,31 @@ export default async function StepPage({
                 ) : (
                   <p className="text-sm text-stone-600">
                     Bacaan belum dipasang admin untuk langkah ini.
+                  </p>
+                )}
+              </section>
+            )}
+
+            {step.kind === "article" && (
+              <section aria-label="Artikel">
+                {articleHtml ? (
+                  <article
+                    className="rich-text border border-line bg-white p-6 sm:p-8"
+                    dangerouslySetInnerHTML={{ __html: articleHtml }}
+                  />
+                ) : (
+                  <p className="border border-dashed border-line bg-mist px-4 py-8 text-center text-sm text-stone-600">
+                    Isi artikel belum ditulis admin untuk langkah ini.
+                  </p>
+                )}
+                {!step.completed && articleHtml && (
+                  <div className="mt-4">
+                    <MarkCompleteButton stepId={step.id} />
+                  </div>
+                )}
+                {step.completed && (
+                  <p role="status" className="mt-4 text-sm font-medium text-green-800">
+                    Sudah selesai ✓ — lanjut ke langkah berikut di bawah.
                   </p>
                 )}
               </section>

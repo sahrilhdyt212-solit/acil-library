@@ -23,6 +23,7 @@ export interface StepBookOption {
 const KIND_LABEL: Record<CourseStepKind, string> = {
   video: "Video",
   book: "Bacaan",
+  article: "Artikel",
   quiz: "Kuis",
   discussion: "Diskusi",
 };
@@ -42,6 +43,7 @@ export function StepManager({
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [bookId, setBookId] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [body, setBody] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -49,6 +51,7 @@ export function StepManager({
   const [editYoutube, setEditYoutube] = useState("");
   const [editBook, setEditBook] = useState("");
   const [editPrompt, setEditPrompt] = useState("");
+  const [editBody, setEditBody] = useState("");
 
   async function onAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -61,6 +64,7 @@ export function StepManager({
       youtubeUrl: kind === "video" ? youtubeUrl : null,
       bookId: kind === "book" ? bookId || null : null,
       prompt: kind === "discussion" ? prompt : null,
+      body: kind === "article" ? body : null,
     });
     setPending(false);
     if (!res.ok) {
@@ -71,6 +75,7 @@ export function StepManager({
     setYoutubeUrl("");
     setBookId("");
     setPrompt("");
+    setBody("");
     router.refresh();
   }
 
@@ -95,6 +100,7 @@ export function StepManager({
     setEditYoutube(s.youtube_url ?? "");
     setEditBook(s.book_id ?? "");
     setEditPrompt(s.prompt ?? "");
+    setEditBody(s.body ?? "");
     setError(null);
   }
 
@@ -106,6 +112,7 @@ export function StepManager({
       youtubeUrl: editYoutube,
       bookId: editBook || null,
       prompt: editPrompt,
+      body: editBody,
     });
     setPending(false);
     if (!res.ok) {
@@ -152,6 +159,13 @@ export function StepManager({
                   <div className="space-y-1.5">
                     <Label>Topik diskusi</Label>
                     <Textarea value={editPrompt} onChange={(e) => setEditPrompt(e.target.value)} rows={3} />
+                  </div>
+                )}
+                {s.kind === "article" && (
+                  <div className="space-y-1.5">
+                    <Label>Isi artikel (markdown)</Label>
+                    <Textarea value={editBody} onChange={(e) => setEditBody(e.target.value)} rows={10} className="font-mono text-[13px]" />
+                    <p className="text-xs text-stone-500">Mendukung judul #, **tebal**, list, kutipan, tabel, dan link.</p>
                   </div>
                 )}
                 <div className="flex gap-2">
@@ -201,6 +215,7 @@ export function StepManager({
             <select value={kind} onChange={(e) => setKind(e.target.value as CourseStepKind)} className="h-10 w-full border border-line bg-white px-3 text-sm">
               <option value="video">Video (YouTube)</option>
               <option value="book">Bacaan (buku)</option>
+              <option value="article">Artikel (tulis langsung)</option>
               <option value="quiz">Kuis</option>
               <option value="discussion">Diskusi</option>
             </select>
@@ -231,6 +246,12 @@ export function StepManager({
           <div className="space-y-1.5">
             <Label>Topik diskusi</Label>
             <Textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={3} placeholder="Pertanyaan pemantik untuk peserta…" />
+          </div>
+        )}
+        {kind === "article" && (
+          <div className="space-y-1.5">
+            <Label>Isi artikel (markdown)</Label>
+            <Textarea value={body} onChange={(e) => setBody(e.target.value)} rows={8} placeholder={"## Pengantar\n\nTulis materi di sini. Mendukung **tebal**, list, kutipan, tabel, dan [link](https://…)."} className="font-mono text-[13px]" />
           </div>
         )}
         {error && (

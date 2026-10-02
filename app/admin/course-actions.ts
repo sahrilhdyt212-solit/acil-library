@@ -165,7 +165,7 @@ export async function deleteCourseAction(id: string): Promise<CourseActionResult
   }
 }
 
-const STEP_KINDS: CourseStepKind[] = ["video", "book", "quiz", "discussion"];
+const STEP_KINDS: CourseStepKind[] = ["video", "book", "article", "quiz", "discussion"];
 
 export interface AddStepInput {
   courseId: string;
@@ -174,6 +174,7 @@ export interface AddStepInput {
   youtubeUrl?: string | null;
   bookId?: string | null;
   prompt?: string | null;
+  body?: string | null;
 }
 
 export async function addStepAction(input: AddStepInput): Promise<CourseActionResult> {
@@ -206,6 +207,7 @@ export async function addStepAction(input: AddStepInput): Promise<CourseActionRe
         youtube_url: input.kind === "video" ? youtube : null,
         book_id: input.kind === "book" ? input.bookId || null : null,
         prompt: input.kind === "discussion" ? input.prompt?.trim() || null : null,
+        body: input.kind === "article" ? input.body?.trim() || null : null,
       })
       .select("id")
       .single();
@@ -232,6 +234,7 @@ export interface UpdateStepInput {
   youtubeUrl?: string | null;
   bookId?: string | null;
   prompt?: string | null;
+  body?: string | null;
 }
 
 export async function updateStepAction(stepId: string, input: UpdateStepInput): Promise<CourseActionResult> {
@@ -256,6 +259,7 @@ export async function updateStepAction(stepId: string, input: UpdateStepInput): 
         youtube_url: kind === "video" ? youtube : null,
         book_id: kind === "book" ? input.bookId || null : null,
         prompt: kind === "discussion" ? input.prompt?.trim() || null : null,
+        body: kind === "article" ? input.body?.trim() || null : null,
       })
       .eq("id", stepId);
     if (error) return { ok: false, error: error.message };

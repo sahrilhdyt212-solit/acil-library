@@ -113,6 +113,7 @@ function toStep(row: Record<string, unknown>): CourseStep {
     youtube_url: (row.youtube_url as string | null) ?? null,
     book_id: (row.book_id as string | null) ?? null,
     prompt: (row.prompt as string | null) ?? null,
+    body: (row.body as string | null) ?? null,
     book: rawBook
       ? {
           id: rawBook.id,

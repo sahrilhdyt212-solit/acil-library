@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   BookOpen,
   CheckCircle2,
+  FileText,
   HelpCircle,
   KeyRound,
   Lock,
@@ -39,6 +40,7 @@ export async function generateMetadata({
 const KIND_META: Record<CourseStepKind, { label: string; Icon: typeof PlayCircle }> = {
   video: { label: "Video", Icon: PlayCircle },
   book: { label: "Bacaan", Icon: BookOpen },
+  article: { label: "Artikel", Icon: FileText },
   quiz: { label: "Kuis", Icon: HelpCircle },
   discussion: { label: "Diskusi", Icon: MessagesSquare },
 };

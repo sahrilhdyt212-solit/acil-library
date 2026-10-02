@@ -52,7 +52,9 @@ export interface LibraryQuery {
 
 // ── Courses (FutureLearn-style learning paths) ──────────────
 
-export type CourseStepKind = "video" | "book" | "quiz" | "discussion";
+export type CourseStepKind = "video" | "book" | "quiz" | "discussion" | "article";
+
+export const COURSE_STEP_KINDS: CourseStepKind[] = ["video", "book", "article", "quiz", "discussion"];
 
 export interface Course {
   id: string;
@@ -115,6 +117,8 @@ export interface CourseStep {
   youtube_url: string | null;
   book_id: string | null;
   prompt: string | null;
+  /** Isi markdown untuk kind article (ditulis admin). */
+  body: string | null;
   book?: CourseStepBook | null;
   /** Runtime: sudah diselesaikan user ini. */
   completed?: boolean;

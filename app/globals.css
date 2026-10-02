@@ -71,6 +71,123 @@ body {
   height: auto !important;
 }
 
+/* Rich article body (langkah artikel kursus — HTML dari markdown admin) */
+.rich-text {
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: #44403b;
+  overflow-wrap: break-word;
+}
+.rich-text > *:first-child {
+  margin-top: 0;
+}
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4 {
+  color: #1d1d1f;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 1.6em 0 0.6em;
+}
+.rich-text h1 {
+  font-size: 1.6rem;
+}
+.rich-text h2 {
+  font-size: 1.35rem;
+}
+.rich-text h3 {
+  font-size: 1.15rem;
+}
+.rich-text h4 {
+  font-size: 1.02rem;
+}
+.rich-text p {
+  margin: 0.9em 0;
+}
+.rich-text ul,
+.rich-text ol {
+  margin: 0.9em 0;
+  padding-left: 1.5rem;
+}
+.rich-text ul {
+  list-style: disc;
+}
+.rich-text ol {
+  list-style: decimal;
+}
+.rich-text li {
+  margin: 0.35em 0;
+}
+.rich-text li > ul,
+.rich-text li > ol {
+  margin: 0.35em 0;
+}
+.rich-text blockquote {
+  margin: 1.1em 0;
+  padding: 0.6em 1em;
+  border-left: 3px solid #1c3a2e;
+  background: #f5f5f4;
+  color: #57534d;
+}
+.rich-text blockquote p {
+  margin: 0.4em 0;
+}
+.rich-text a {
+  color: #1c3a2e;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rich-text code {
+  font-size: 0.88em;
+  background: #f5f5f4;
+  border: 1px solid #e5e5ea;
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.rich-text pre {
+  margin: 1.1em 0;
+  padding: 1em 1.2em;
+  background: #141210;
+  color: #f5f5f4;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.rich-text pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+.rich-text hr {
+  margin: 1.8em 0;
+  border: 0;
+  border-top: 1px solid #e5e5ea;
+}
+.rich-text table {
+  width: 100%;
+  margin: 1.1em 0;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  display: block;
+  overflow-x: auto;
+}
+.rich-text th,
+.rich-text td {
+  border: 1px solid #e5e5ea;
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+.rich-text th {
+  background: #f5f5f4;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
 /* Subtle motion only — fully disabled for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
   html {

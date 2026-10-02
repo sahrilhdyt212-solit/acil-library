@@ -61,7 +61,7 @@ export default async function EditCoursePage({
 
   const { data: stepRows } = await supabase
     .from("course_steps")
-    .select("id, course_id, kind, title, position, youtube_url, book_id, prompt")
+    .select("id, course_id, kind, title, position, youtube_url, book_id, prompt, body")
     .eq("course_id", id)
     .order("position", { ascending: true });
   const steps = (stepRows ?? []) as unknown as CourseStep[];
