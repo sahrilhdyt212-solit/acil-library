@@ -12,8 +12,10 @@ import {
   PlayCircle,
 } from "lucide-react";
 import { getCourseDetail, getReaderUser } from "@/lib/courses";
+import { getMyCertificate } from "@/lib/certificates";
 import { CoverImage } from "@/components/books/CoverImage";
 import { EnrollButton } from "@/components/courses/EnrollButton";
+import { ClaimButton } from "@/components/courses/ClaimButton";
 import type { CourseStepKind } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -55,6 +57,7 @@ export default async function CourseDetailPage({
   const doneCount = steps.filter((s) => s.completed).length;
   const pct = steps.length > 0 ? Math.round((doneCount / steps.length) * 100) : 0;
   const resume = steps.find((s) => !s.completed && s.unlocked) ?? null;
+  const myCert = enrollment ? await getMyCertificate(user?.id ?? null, course.id) : null;
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
@@ -144,6 +147,18 @@ export default async function CourseDetailPage({
                   <p className="mt-4 text-sm font-medium text-green-800">
                     Semua langkah selesai. Kerja bagus!
                   </p>
+                )}
+                {enrollment.completed_at && course.certificate_enabled !== false && (
+                  <div className="mt-4 border-t border-line pt-4">
+                    <p className="text-sm font-medium">Sertifikat pencapaian</p>
+                    <div className="mt-2">
+                      <ClaimButton
+                        courseId={course.id}
+                        courseSlug={course.slug}
+                        existingCode={myCert?.code ?? null}
+                      />
+                    </div>
+                  </div>
                 )}
               </>
             )}

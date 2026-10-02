@@ -152,3 +152,33 @@ export async function moderateCommentAction(
     return err(e, "Gagal memoderasi komentar. Coba lagi.");
   }
 }
+
+/**
+ * Klaim sertifikat kursus yg sudah tamat.
+ * Mengembalikan { code } atau { needProfile: true } bila nama belum diisi.
+ */
+export async function claimCertificateAction(
+  courseId: string
+): Promise<ActionResult & { needProfile?: boolean }> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { ok: false, error: "Harus masuk dulu." };
+    const { data, error } = await supabase.rpc("claim_certificate", {
+      p_course_id: courseId,
+    });
+    if (error) {
+      if (error.message.includes("PROFILE_INCOMPLETE")) {
+        return { ok: false, needProfile: true, error: "Lengkapi dulu nama lengkap di profil." };
+      }
+      return { ok: false, error: error.message };
+    }
+    revalidatePath("/kursus");
+    revalidatePath("/belajarku");
+    return { ok: true, data: (data as unknown as Record<string, unknown>) ?? {} };
+  } catch (e) {
+    return err(e, "Gagal mengklaim sertifikat. Coba lagi.");
+  }
+}

@@ -55,8 +55,8 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  // Protect /belajarku: pembaca wajib masuk dulu.
-  if (pathname.startsWith("/belajarku")) {
+  // Protect /belajarku + /profil: pembaca wajib masuk dulu.
+  if (pathname.startsWith("/belajarku") || pathname.startsWith("/profil")) {
     const {
       data: { user },
     } = await supabase.auth.getUser();

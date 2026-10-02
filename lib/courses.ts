@@ -13,9 +13,11 @@ import type {
 } from "@/types";
 
 const COURSE_SELECT =
-  "id, title, slug, description, cover_path, published, requires_code, created_at, updated_at";
+  "id, title, slug, description, cover_path, published, requires_code, created_at, updated_at, provider, duration_text, certificate_enabled";
 
 function toCourse(row: Record<string, unknown>): Course {
+  const arr = (v: unknown): string[] | null =>
+    Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : null;
   return {
     id: row.id as string,
     title: row.title as string,
@@ -27,6 +29,14 @@ function toCourse(row: Record<string, unknown>): Course {
     requires_code: Boolean(row.requires_code ?? false),
     created_at: row.created_at as string,
     updated_at: row.updated_at as string,
+    provider: (row.provider as string | null) ?? null,
+    duration_text: (row.duration_text as string | null) ?? null,
+    outcomes: arr(row.outcomes),
+    syllabus: arr(row.syllabus),
+    ttd_image_path: (row.ttd_image_path as string | null) ?? null,
+    ttd_name: (row.ttd_name as string | null) ?? null,
+    ttd_title: (row.ttd_title as string | null) ?? null,
+    certificate_enabled: row.certificate_enabled !== false,
   };
 }
 
