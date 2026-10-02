@@ -157,23 +157,29 @@ export async function getCourseDetail(
     let enrollment: CourseDetail["enrollment"] = null;
     let done = new Set<string>();
     if (userId) {
-      const { data: enr } = await supabase
-        .from("enrollments")
-        .select("id, completed_at")
-        .eq("user_id", userId)
-        .eq("course_id", course.id)
-        .maybeSingle();
-      if (enr) {
-        enrollment = enr as { id: string; completed_at: string | null };
-        const { data: prog } = await supabase
+      // Enroll + progres jalan paralel (independen) — hemat 1-2 roundtrip
+      // ke Supabase yg lagi flaky.
+      const [enrRes, progRes] = await Promise.all([
+        supabase
+          .from("enrollments")
+          .select("id, completed_at")
+          .eq("user_id", userId)
+          .eq("course_id", course.id)
+          .maybeSingle(),
+        supabase
           .from("step_progress")
           .select("step_id")
           .eq("user_id", userId)
           .in(
             "step_id",
             steps.map((s) => s.id)
-          );
-        done = new Set(((prog ?? []) as Array<{ step_id: string }>).map((p) => p.step_id));
+          ),
+      ]);
+      if (enrRes.data) {
+        enrollment = enrRes.data as { id: string; completed_at: string | null };
+        done = new Set(
+          ((progRes.data ?? []) as Array<{ step_id: string }>).map((p) => p.step_id)
+        );
       }
     }
 
@@ -240,27 +246,29 @@ export async function getStepDetail(
             .eq("quiz_id", quizRow.id)
             .order("position", { ascending: true });
           const qids = ((qs ?? []) as Array<{ id: string }>).map((x) => x.id);
+          const [optsRes, attsRes] = await Promise.all([
+            qids.length > 0
+              ? supabase
+                  .from("quiz_options")
+                  .select("id, question_id, position, text")
+                  .in("question_id", qids)
+                  .order("position", { ascending: true })
+              : Promise.resolve({ data: [] as QuizOption[] }),
+            supabase
+              .from("quiz_attempts")
+              .select("id, quiz_id, score, passed, created_at")
+              .eq("user_id", userId)
+              .eq("quiz_id", quizRow.id)
+              .order("created_at", { ascending: false })
+              .limit(5),
+          ]);
           const optMap = new Map<string, QuizOption[]>();
-          if (qids.length > 0) {
-            const { data: opts } = await supabase
-              .from("quiz_options")
-              .select("id, question_id, position, text")
-              .in("question_id", qids)
-              .order("position", { ascending: true });
-            for (const o of (opts ?? []) as QuizOption[]) {
-              const arr = optMap.get(o.question_id) ?? [];
-              arr.push(o);
-              optMap.set(o.question_id, arr);
-            }
+          for (const o of ((optsRes.data ?? []) as QuizOption[])) {
+            const arr = optMap.get(o.question_id) ?? [];
+            arr.push(o);
+            optMap.set(o.question_id, arr);
           }
-          const { data: atts } = await supabase
-            .from("quiz_attempts")
-            .select("id, quiz_id, score, passed, created_at")
-            .eq("user_id", userId)
-            .eq("quiz_id", quizRow.id)
-            .order("created_at", { ascending: false })
-            .limit(5);
-          const attempts = (atts ?? []) as QuizAttempt[];
+          const attempts = ((attsRes.data ?? []) as QuizAttempt[]);
           quiz = {
             quiz: quizRow,
             questions: ((qs ?? []) as QuizQuestion[]).map((qq) => ({

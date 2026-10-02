@@ -34,7 +34,14 @@ export default async function StepPage({
 
   const totalSteps = Math.max(position, next?.position ?? position);
   const youtubeId = step.kind === "video" ? getYouTubeId(step.youtube_url) : null;
-  const articleHtml = step.kind === "article" ? await renderMarkdown(step.body) : "";
+  let articleHtml = "";
+  if (step.kind === "article") {
+    try {
+      articleHtml = await renderMarkdown(step.body);
+    } catch {
+      articleHtml = "";
+    }
+  }
 
   return (
     <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:px-6">
