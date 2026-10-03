@@ -89,7 +89,7 @@ create policy "Authenticated full access books"
 
 -- ── Seed categories ─────────────────────────────────────────
 insert into public.categories (name, slug, description) values
-  ('Novel Hukum', 'novel-hukum', 'Fiksi berlatar dunia hukum — novel, cerita, dan narasi keadilan.'),
+  ('Novel Hukum', 'novel-hukum', 'Fiksi berlatar dunia hukum: novel, cerita, dan narasi keadilan.'),
   ('Hukum', 'hukum', 'Literatur ilmu hukum: teori, praktik, dan referensi.'),
   ('Politik', 'politik', 'Buku-buku politik, kekuasaan, dan kenegaraan.')
 on conflict (slug) do nothing;
